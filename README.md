@@ -1,4 +1,4 @@
-# Claude Code Harness
+# Predictive Generative Harness System (PGH System)
 
 一个为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 设计的持久化记忆与工作流系统。赋予 Claude 跨会话的长期记忆、结构化项目管理和自我改进的行为模式。
 
@@ -16,7 +16,7 @@ Claude Code 默认是无状态的——每个新会话从零开始。这套 harn
 ## 架构概览
 
 ```
-claude-code-harness/
+pgh-system/
 ├── .claude/                          # Claude Code 配置
 │   ├── CLAUDE.md                     # 主控面板（启动序列 + 规则）
 │   ├── settings.json                 # Hooks 配置 + 禁用自动记忆
