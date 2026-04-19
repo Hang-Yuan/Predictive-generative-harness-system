@@ -1,0 +1,79 @@
+{
+  "autoMemoryEnabled": false,
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat '<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat '<ASSISTANT_ROOT>/USER/USER.md'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat '<ASSISTANT_ROOT>/MEMORY/procedural_memory.md'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat '<ASSISTANT_ROOT>/MEMORY/semantic_memory.md'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/timesense.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/memory_signal.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/thinking_protocol.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "good night|bye|see you|that's all for today",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/session_end.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
