@@ -1,1 +1,1 @@
-[This is a placeholder sub-file. Fill in your personality assessments and behavioral patterns.]
+[占位子文件。在此填写你的人格测评与行为模式。]

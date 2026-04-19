@@ -1,55 +1,55 @@
 ---
-title: Agent Architecture Change Log
+title: Agent 架构变更日志
 type: agent-changelog
 version: 1.0
 last_updated: YYYY-MM-DD
 ---
 
-# Agent Architecture Change Log
+# Agent 架构变更日志
 
-## Loading Chain
+## 加载链
 
-**Upstream:**
-Authority source. Written during daily-review step 6b and weekly-review step 7.5. Major changes can be appended immediately.
+**上游：**
+权威源。由 daily-review 步骤 6b 和 weekly-review 步骤 7.5 写入。重大变更可即时追加。
 
-**Related:**
-- `LTM.md` — current situation + cross-week work nodes + weekly work review go to LTM, ITERATION_LOG doesn't record work progress.
-- `MEMORY/MEMORY_LOG.md` — MEMORY_LOG only handles memory system metabolism (candidate pool changes + memory weekly reviews), ITERATION_LOG handles all architecture-level changes. No overlap.
-
----
-
-## About This File
-
-**Iteration log** tracks meaningful changes to the Agent system itself—not your work content, but how the AI thinks, what new skills it learned, workflow adjustments, parameter changes, and lessons learned.
-
-**What to record (authority source, all architecture-level changes go here):**
-- System architecture changes (file structure / protocol rules / inheritance chain / loading chain)
-- Skill creation / rewrite / deprecation
-- Workflow changes
-- Parameter adjustments
-- Persona file changes
-- Memory system protocol iterations
-- Hook script rewrites
-- Major document version updates
-
-**What NOT to record:**
-- Daily work progress (in `_本周.md` progress records)
-- Cross-week work nodes (in `LTM.md` detailed weekly records)
-- Memory entry changes (in `MEMORY_LOG.md §操作日志`)
-- Memory weekly reviews (in `MEMORY_LOG.md §周复盘`)
+**同级联动：**
+- `LTM.md` — 当前处境 + 跨周工作节点 + 周工作复盘走 LTM，ITERATION_LOG 不记录工作进展
+- `MEMORY/MEMORY_LOG.md` — MEMORY_LOG 只管记忆系统代谢（候选池变更 + 记忆周复盘），ITERATION_LOG 管所有架构级变更，无重叠
 
 ---
 
-## Version Number Rules
+## 关于本文件
 
-Semantic versioning: `vMajor.Minor.Patch`
+**迭代日志** 追踪 Agent 系统本身的实质性变更——不是你的工作内容，而是 AI 怎么思考、新学了什么技能、工作流调整、参数变化、经验教训。
 
-- **Major** (X.0.0): Breaking changes to architecture or core workflow
-- **Minor** (0.X.0): New features/skills, parameter adjustments, workflow extensions
-- **Patch** (0.0.X): Bug fixes, documentation clarifications, small optimizations
+**要记录的（权威源，所有架构级变更都在此）：**
+- 系统架构变更（文件结构 / 协议规则 / 继承链 / 加载链）
+- 技能创建 / 重写 / 废弃
+- 工作流变更
+- 参数调整
+- 人格文件变动
+- 记忆系统协议迭代
+- Hook 脚本重写
+- 重要文档大版本更新
+
+**不要记录的：**
+- 每日工作进展（在 `_本周.md` 进展记录里）
+- 跨周工作节点（在 `LTM.md` 详细周录里）
+- 记忆条目变更（在 `MEMORY_LOG.md §操作日志` 里）
+- 记忆周复盘（在 `MEMORY_LOG.md §周复盘` 里）
+
+---
+
+## 版本号规则
+
+语义版本：`v主版本.次版本.补丁`
+
+- **主版本**（X.0.0）：架构或核心工作流的破坏性变更
+- **次版本**（0.X.0）：新功能/技能、参数调整、工作流扩展
+- **补丁**（0.0.X）：bug 修复、文档澄清、小优化
 
 ---
 
 ## 变更记录
 
-(Versioned change entries will be appended here, old→new order, newest always at file bottom.)
+（版本化变更条目在此从旧到新追加，最新永远在文件底部。）

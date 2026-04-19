@@ -4,50 +4,50 @@ type: memory-pool
 layer: procedural
 version: 3.1
 created: YYYY-MM-DD
-description: Procedural layer candidate pool—AI action handbook (situation→action). ★★★★★ graduates to SOUL/persona/persona_SOUL.md.
+description: 程序层候选池——AI 行动手册（情境→行动）。★★★★★ 毕业至 SOUL/persona/persona_SOUL.md。
 ---
 
-# Procedural Candidate Pool (Procedural Memory)
+# 程序层候选池（Procedural Memory）
 
-Candidate pool, not a warehouse.
+候选池，不是仓库。
 
-## Loading Chain
+## 加载链
 
-- **Upstream**: `CLAUDE.md §B startup sequence` step 3
-- **Related**:
-  - `00.memory_agent.md` — write format / metabolism rules / judgment anchors (rule authority)
-  - `semantic_memory.md` — semantic layer candidate pool
-  - `MEMORY_LOG.md` — metabolism log
-  - `SOUL/persona/persona_SOUL.md` — graduation target
+- **上游**：`CLAUDE.md §B 启动序列` 步骤 3
+- **同级联动**：
+  - `00.memory_agent.md` — 写入格式 / 代谢规则 / 判断锚点（规则权威）
+  - `semantic_memory.md` — 语义层候选池
+  - `MEMORY_LOG.md` — 代谢流水
+  - `SOUL/persona/persona_SOUL.md` — 毕业目标
 
-> Read `00.memory_agent.md` before any write/metabolism operations.
+> 所有写入/代谢操作前先读 `00.memory_agent.md`。
 
 ---
 
-## Entry Format
+## 条目格式
 
-Each entry is a **script**—an action rule for AI when encountering a specific situation, with expected outcomes (to verify rule effectiveness).
+每条条目是一个 **script** —— AI 遇到特定情境时的行动规则，附带预期后效（用于验证规则是否成立）。
 
-| Field | Description |
+| 字段 | 说明 |
 |---|---|
-| **Strength** | ★–★★★★★, stars = stability |
-| **Trigger situation** | What context activates this rule |
-| **Action pattern** | What AI should execute |
-| **Expected outcome** | Expected user/world response after executing (for validation) |
-| **Discovery date** | Date of first observation |
-| **Evidence** | Specific events supporting the observation |
-| **related** | Related entries |
+| **强度** | ★–★★★★★，星级即稳定度 |
+| **触发情境** | 什么情形下这条规则被激活 |
+| **行动模式** | AI 应执行的动作 |
+| **预期后效** | 执行此行动后预期用户/世界如何反应（用于验证规则有效性） |
+| **发现日期** | 首次观察日期 |
+| **证据** | 支撑观察的具体事件 |
+| **related** | 关联条目 |
 
 ---
 
-## Current Entries
+## 当前条目
 
-(Empty — entries will accumulate through conversation observations and reviews.)
+（空 —— 条目将在对话观察与复盘中逐步积累。）
 
 ---
 
-## Alias Reference Table
+## 别名对照表
 
-| User says | Actual reference | Context |
+| 用户说法 | 实际指代 | 场景 |
 |---|---|---|
-| [example] | [actual item] | [recent discussion] |
+| [示例] | [实际指代] | [最近讨论中] |

@@ -1,93 +1,93 @@
 ---
 name: week-sync
-description: Focus Zone state sync. Auto-called at startup step 6 every session. Two tiers by day of week: Mon-Thu lightweight sync, Fri-Sun deep backtrack. Both include continuity check.
+description: 专注区状态同步。每次会话启动步骤 6 自动调用（无需用户触发）。根据星期几分两档：周一至周四轻量同步，周五至周日深度回溯。两档均包含接续检查。
 ---
 
 # week-sync
 
-Focus Zone state sync authority source. Auto-called by `CLAUDE.md §B startup sequence` step 6 every session.
+专注区状态同步权威源。由 `CLAUDE.md §B 启动序列` 步骤 6 每次会话启动时自动调用。
 
-## Loading Chain
+## 加载链
 
-**Upstream**: `CLAUDE.md §B startup sequence` step 6 — auto-called every session.
+**上游**：`CLAUDE.md §B 启动序列` 步骤 6 — 每次会话自动调用。
 
-**Downstream**: `<ASSISTANT_ROOT>/00 Focus Zone/_本周.md` (write task markers during deep backtrack)
-
----
-
-## Sunday Special Check (execute before either tier)
-
-If today is **Sunday**:
-
-1. Check if `_本周.md` already has `### 本周产出` section
-2. **Has it** → weekly review already done, proceed with normal sync
-3. **Doesn't have it** → append at end of sync report: "Today is Sunday, weekly review hasn't been done yet. Want to start now?" (wait for user response, don't auto-trigger)
+**下游**：`<ASSISTANT_ROOT>/00 Focus Zone/_本周.md`（深度回溯时写入任务标记）
 
 ---
 
-## Both Tiers Include: Continuity Check (must execute every time)
+## 周日特殊检查（任何一档均先执行）
 
-At the end of sync report, execute continuity check:
+如果当日为**周日**：
 
-1. Read `_本周.md` progress records, find **most recent date with substantive work** (skip blank days)
-2. From that date section, extract all work segments':
-   - Project names
-   - File lists from "Related:" fields
-3. Append continuity prompt at report end:
+1. 检查 `_本周.md` 是否已有 `### 本周产出` 节
+2. **有** → 说明本周复盘已完成，正常执行下方同步流程
+3. **无** → 在同步报告末尾提示：「今天是周日，本周复盘还没做。要现在开始吗？」（等用户回应，不自动触发）
+
+---
+
+## 两档共同包含：接续检查（每次必须执行）
+
+在同步报告的末尾，执行接续检查：
+
+1. 读取 `_本周.md` 进展记录，找到**最近一次有实质工作的日期**（跳过空白日）
+2. 从该日期节中提取所有工作段的：
+   - 项目名称
+   - 「关联：」字段中的文件列表
+3. 在报告末尾附上接续提示：
 
 ```
 ---
-**Last worked** (YYYY-MM-DD):
-- [Project name]: [what was done that day, one sentence]
-  → Related files: [file1] · [file2]
+**上次工作**（YYYY-MM-DD）：
+- [项目名]：[当天做了什么，一句话]
+  → 关联文件：[文件名1] · [文件名2]
 
-To continue, tell me and I'll read the related files and give you a summary.
+要继续的话，告诉我，我先读一下相关文件再给你汇总。
 ```
 
-> If user's first message is "continue" / "pick up where we left off" etc., directly read related files and give full summary without waiting for confirmation.
+> 如果用户当天第一句话就是「继续」「继续昨天」「从哪里开始」等，直接读取关联文件，给出完整汇总，不等确认。
 
 ---
 
-## Lightweight Sync (Monday to Thursday)
+## 轻量同步（周一至周四）
 
-1. Read `_本周.md`, confirm current week, task list, and progress records
-2. Brief user: what day of the week, task completion status (X/N done), one-sentence recent progress summary
-3. Execute continuity check (see above)
-4. Don't modify files, don't ask for details
+1. 读取 `_本周.md`，确认当前周次、任务清单和进展记录
+2. 向用户简报：本周第几天、任务完成状态（X/N 完成）、近期进展一句话摘要
+3. 执行接续检查（见上）
+4. 不修改文件，不询问细节
 
 ---
 
-## Deep Backtrack (Friday to Sunday)
+## 深度回溯（周五至周日）
 
-Core logic: **Identify active projects from `_本周.md` progress records, scan active project folders to discover unrecorded files, then cross-check task status.**
+核心逻辑：**从 `_本周.md` 进展记录识别活跃项目，扫描活跃项目文件夹发现漏记文件，再核对任务状态。**
 
-1. **Read `_本周.md` full text**, extract:
-   - Task list: all tasks and completion status
-   - Progress records: identify active project paths + recorded file names from each day's "Related:" fields
-   - Week start date (from frontmatter `dates` field)
+1. **读取 `_本周.md` 全文**，提取：
+   - 任务清单：所有任务项及完成状态
+   - 进展记录：从每天工作段「关联：」字段识别活跃项目路径 + 已记录文件名列表
+   - 本周开始日期（从 frontmatter `dates` 字段）
 
-2. **Identify active projects**: extract project names under `01 Projects/` from related fields
+2. **识别活跃项目**：从关联字段中提取 `01 Projects/` 下的项目名，得到活跃项目路径列表
 
-3. **Diff scan (discover unrecorded files)**:
-   - Scan each active project folder, collect `.md` files with **modification time ≥ week start date**
-   - Exclude: `_归档/`, `_概览.md`, `文献记录.md` and other non-work-output files
-   - **Diff** = files modified this week - file names already recorded in related fields
-   - For each diff file, read first 30 lines to understand content and purpose
+3. **差集扫描（发现漏记文件）**：
+   - 扫描每个活跃项目文件夹，收集**修改时间 ≥ 本周开始日期**的 `.md` 文件
+   - 排除：`_归档/`、`_概览.md`、`文献记录.md` 等非工作产出文件
+   - **差集** = 本周修改的文件 - 关联字段已记录的文件名
+   - 对差集里每个文件，读前 30 行，理解内容和用途
 
-4. **Load active project overviews**: for each active project, read `_概览.md` for current status
+4. **加载活跃项目概览**：对每个活跃项目，读取 `_概览.md`，了解当前状态
 
-5. **Cross-check task completion**:
-   - Compare task list, identify "has progress in records but not marked complete in task list" items
+5. **核对任务完成状态**：
+   - 对照任务清单，识别「进展记录里有推进但任务清单未标完成」的条目
 
-6. **Update `_本周.md`** (silent write):
-   - Mark clearly completed items as done (only mark definitively completed ones)
-   - Mark uncertain ones as "pending confirmation"
+6. **更新 `_本周.md`**（静默写入）：
+   - 将有进展记录支撑的待办项标记为完成（明确完成的才标）
+   - 不确定的标注「待确认」
 
-7. **Report to user**:
-   - Which projects were active this week, where each progressed to
-   - **Diff files**: discovered unrecorded files, inferred content, suggest adding to progress records (don't auto-write, date attribution confirmed by user)
-   - What task statuses were updated
-   - Pending confirmation items
-   - Execute continuity check (see above)
+7. **向用户报告**：
+   - 本周活跃了哪些项目，各自推进到什么位置
+   - **差集文件**：发现了哪些漏记文件、推断内容，建议补充到进展记录（不自动写入，日期归属由用户确认）
+   - 更新了哪些任务状态
+   - 待确认项
+   - 执行接续检查（见上）
 
-> **Core principle: use actual modifications in active project folders as ground truth, discover unrecorded files; use related fields as index, targeted loading of active projects, don't scan entire library.**
+> **核心原则：以活跃项目文件夹的实际修改为基准，发现漏记文件；以关联字段为索引，定向加载活跃项目，不扫全库。**

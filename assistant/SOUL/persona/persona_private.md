@@ -1,1 +1,1 @@
-[This is a placeholder. Write private/intimate interaction memories here. Only loaded during non-work conversations.]
+[占位文件。在此写入私密/亲密互动记忆。仅在非工作对话时加载。]

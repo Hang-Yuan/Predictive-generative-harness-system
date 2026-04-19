@@ -1,290 +1,290 @@
 ---
 name: weekly-review
-description: Weekly review workflow. Trigger conditions: (1) Sunday daily-review step 6.5 auto-call; (2) week-sync Sunday detection prompts if not done; (3) User says "review", "weekly review", "summarize this week", etc.
+description: 周复盘流程。触发条件：（1）每周日 daily-review 步骤6.5 自动调用；（2）week-sync 周日检测到未完成时主动提示；（3）用户说「复盘」「周复盘」「总结一下这周」等。
 ---
 
 # weekly-review
 
-Weekly review workflow authority source. After review completion, auto-execute weekly archival (no need to ask).
+周复盘流程权威源。复盘完成后自动执行周归档，无需询问。
 
-## Trigger Mechanism
+## 触发机制
 
-| Method | When | Who triggers |
-|--------|------|-------------|
-| Auto trigger | Sunday daily-review step 6.5 | daily-review calls at farewell |
-| Startup prompt | Sunday week-sync detects not done | week-sync prompts at session start |
-| Manual trigger | Any time | User says trigger words |
+| 方式 | 何时 | 谁触发 |
+|------|------|--------|
+| 自动触发 | 周日 daily-review 步骤6.5 | 告别时 daily-review 调用 |
+| 启动提示 | 周日 week-sync 检测到未完成 | 会话开始时 week-sync 提示 |
+| 手动触发 | 任意时刻 | 用户说触发词 |
 
-> **Must complete once every Sunday**. If Sunday session ends without doing it, daily-review step 6.5 forces trigger.
-
----
-
-## Loading Chain
-
-**Upstream**: daily-review step 6.5 (Sunday auto) / week-sync Sunday detection / user trigger
-
-**Downstream**:
-- `<ASSISTANT_ROOT>/00 Focus Zone/_本周.md` (write weekly output section + archive)
-- `<ASSISTANT_ROOT>/MEMORY/procedural_memory.md` (procedural layer strength adjustment, decay, graduation)
-- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md` (semantic layer strength adjustment, decay, graduation)
-- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md` (write complete weekly review entry)
-- `<ASSISTANT_ROOT>/LTM.md` (§当前处境 overwrite + §时间轴 top insert + §详细周录 tail append)
-- `<ASSISTANT_ROOT>/USER/USER.md` (semantic graduation write, requires C-level confirmation)
-- `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md` (procedural graduation write, requires C-level confirmation)
+> **每周日必须完成一次**。如果周日会话结束时还没有做，daily-review 步骤6.5 强制触发。
 
 ---
 
-## Preparation (load before executing)
+## 加载链
 
-Before executing any steps:
-1. Read `_本周.md` full text (task list + progress records)
-2. Read `LTM.md §当前处境` + `§时间轴` (current situation snapshot + cross-week overview)
-3. Read `MEMORY/procedural_memory.md` + `MEMORY/semantic_memory.md` full text (all candidate pool entries)
-4. Read `MEMORY/MEMORY_LOG.md` last 20 lines (recent memory metabolism)
-5. From `_本周.md` task list, identify active projects, read each project's `_概览.md` current status
+**上游**：daily-review 步骤6.5（周日自动）/ week-sync 周日检测 / 用户触发词
 
----
-
-## Review Workflow (strict order)
-
-### Step 1 · Panoramic Summary
-
-Generate a complete weekly panoramic report from `_本周.md` progress records:
-
-**Must cover these dimensions**:
-- **Task completion**: against task list—what's checked off, what's untouched, what's newly added
-- **Core advances**: most important theoretical/research/project advances this week (3-5 items, one sentence each)
-- **Key outputs**: files created or substantially updated this week (what significance, not a list)
-- **Key decisions**: framework-level choices or directional judgments made this week
-- **Cross-project connections**: identify cross-project reasoning continuity (don't report by project independently)
-- **Unexpected gains**: important things accomplished or discovered without planning
-- **Remaining incomplete**: tasks not started or not finished, whether to carry to next week
-
-Present this panorama to user, then continue to step 2.
+**下游**：
+- `<ASSISTANT_ROOT>/00 Focus Zone/_本周.md`（写入本周产出节 + 归档）
+- `<ASSISTANT_ROOT>/MEMORY/procedural_memory.md`（程序层强度调整、衰减、毕业标注）
+- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md`（语义层强度调整、衰减、毕业标注）
+- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md`（写入完整周复盘条目）
+- `<ASSISTANT_ROOT>/LTM.md`（§当前处境 覆盖更新 + §时间轴 顶部插入新行 + §详细周录 尾部追加新周节）
+- `<ASSISTANT_ROOT>/USER/USER.md`（语义层毕业写入，需 C 级确认）
+- `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md`（程序层毕业写入，需 C 级确认）
 
 ---
 
-### Step 2 · Give User Space
+## 准备（执行前加载）
 
-After panoramic summary, say:
-
-"That's this week's panorama. Is there anything particularly important—events, shifts, or your own feelings—you'd like to share first?"
-
-Wait for user input. Incorporate into subsequent steps (don't guide, don't ask specific questions first).
-
----
-
-### Step 3 · Main Thread Alignment Check
-
-Compare this week's work against `LTM.md §当前处境` (main priorities / secondary priorities / major projects / transition predictions):
-
-1. **Alignment**: Did this week's work advance the main priority? How much?
-2. **Deviation**: Did significant time go to non-main-thread work (ad hoc tasks, side explorations)? Worth it?
-3. **Situation change**: After this week, does LTM.md §当前处境 need updating?
-   - Changed → overwrite update (direct write, S-level)
-   - No change → skip
+在执行任何步骤前：
+1. 读取 `_本周.md` 全文（任务清单 + 进展记录）
+2. 读取 `LTM.md §当前处境` + `§时间轴`（当前处境快照 + 跨周全貌）
+3. 读取 `MEMORY/procedural_memory.md` + `MEMORY/semantic_memory.md` 全文（所有候选池条目）
+4. 读取 `MEMORY/MEMORY_LOG.md` 最后 20 行（了解近期记忆代谢）
+5. 从 `_本周.md` 任务清单中识别本周活跃项目，读取各项目 `_概览.md` 当前状态
 
 ---
 
-### Step 3.5 · Episodic Pattern Extraction (episodic→schema, sole system channel)
+## 复盘流程（严格顺序）
 
-**Purpose**: Extract **cross-day recurring intrinsic patterns** from this week's episodic stream into candidate entries for metabolism. Execution Mode real-time writes and daily-review daily scans are the first two safety nets; weekly-review is the third.
+### 步骤 1 · 全景摘要
 
-**Input**: `_本周.md §进展记录` full text + AI-flagged candidates not yet in pool.
+根据 `_本周.md` 进展记录，生成本周完整全景报告：
 
-**Observation Granularity Filter (pre-screen)**:
+**必须覆盖的维度**：
+- **任务完成情况**：对照任务清单，哪些打勾完成，哪些未动，哪些新增
+- **核心推进**：本周最重要的推进是什么（3-5 条，每条一句话）
+- **关键产出**：本周新建或大幅更新的文件（说有什么意义，不列清单）
+- **关键决策**：本周做出的框架性选择或方向判断
+- **跨项目连接**：识别本周工作中跨项目的推理连续性
+- **意外收获**：没有计划但实际完成或发现的重要东西
+- **遗留未完成项**：本周没动或没完成的任务，是否需要延续到下周
 
-| Type | Example | Handling |
+向用户呈现这份全景后继续步骤2。
+
+---
+
+### 步骤 2 · 给用户空间
+
+全景摘要报告完后，说：
+
+「这是本周的全景。有没有什么特别重要的事情、转变、或者你自己的感受，你想先说说的？」
+
+等待用户补充，将补充内容纳入后续步骤（不引导，不先问具体问题）。
+
+---
+
+### 步骤 3 · 主线对齐检查
+
+对照 `LTM.md §当前处境`（主要矛盾 / 次要矛盾 / 大项目 / 转换预判），检查本周工作：
+
+1. **对齐**：本周工作是否推进了当前主要矛盾？进了多少？
+2. **偏移**：本周有没有大量时间花在主线以外的事？值不值？
+3. **处境变化**：本周之后，LTM.md §当前处境 是否需要更新？
+   - 有变化 → 覆盖更新（直接写入，S 级）
+   - 无变化 → 跳过
+
+---
+
+### 步骤 3.5 · 情景模式提取（情景→schema 唯一系统通道）
+
+**目的**：把本周情景流水中**跨日重复的内涵模式**显式提取为候选条目，进入候选池接受代谢。
+
+**输入**：`_本周.md §进展记录` 全文 + 本周对话中 AI 脑内标记未入池的候选。
+
+**观察粒度判准（前置筛子）**：
+
+| 类型 | 示例 | 处理 |
 |---|---|---|
-| **Specific idea** | "User thinks component X should be Y" | **Don't enter candidate pool**, goes to project main doc / episodic layer |
-| **Intrinsic pattern** | "User defines boundaries first then converges when building theories" | **Can enter candidate pool** P / S |
+| **具体想法** | "用户认为组件 X 应该是 Y" | **不入候选池**，归项目主文档 / 情景层 |
+| **内涵模式** | "用户在构建理论时先定义边界再收敛" | **可入候选池** P / S |
 
-Judgment scale: Will this still be true a year from now? Content-dependent→no; points to approach/methodology/behavior pattern→yes.
+判断尺度：这条一年后还成立吗？依附具体内容的→不入；指向思路/方法论/行为模式的→入。
 
-**Three Scan Questions** (categorized by layer):
+**扫描三问**（按层分类）：
 
-| Layer | Scan Question | Pool Direction |
+| 层 | 扫描问 | 入池方向 |
 |---|---|---|
-| **P (Procedural)** | Was AI corrected on anything this week? Same type of error across days/contexts? | `procedural_memory.md` |
-| **S (Semantic)** | Did user show recurring **approach/methodology/value judgment** patterns in thinking/decision-making? | `semantic_memory.md` |
-| **E (Episodic)** | Any stage conclusions or open questions to preserve? | Project main doc / LTM §详细周录 · do not elevate to candidate pool |
+| **P（程序层）** | AI 在本周被用户纠正过什么？是不是跨日跨场景的同类错误？ | `procedural_memory.md` |
+| **S（语义层）** | 用户在思考/决策时，有没有显露出某种**思路/方法论/价值判断**的重复模式？ | `semantic_memory.md` |
+| **E（情景层）** | 本周有没有阶段性结论或未决悬置需沉淀？ | 项目主文档 / LTM §详细周录 · 不上升至候选池 |
 
-**Star Ladder (same-direction repeat observations)**:
+**星级阶梯（同方向重复观察）**：
 
-| Same-direction observations this week | Entry/upgrade |
+| 本周同方向观察次数 | 入池/升星 |
 |---|---|
-| 2 times | ★ (new or keep existing ★) |
-| 3 times | ★★ (new ★★ or existing ★→★★) |
-| Cross-week recurrence (existing entry hit again this week) | Per §M.2 upgrade rules |
+| 2 次 | ★（新建或现有条目保留 ★） |
+| 3 次 | ★★（新建 ★★ 或现有 ★→★★） |
+| 跨周再复现（已有条目本周再次命中） | 按 §M.2 升星规则 |
 
-**Dedup**: Search each candidate against existing entries in `procedural_memory.md` / `semantic_memory.md`. Found → append evidence + upgrade star; Not found → create new, star per ladder.
+**去重**：每条候选在现有条目中检索近似。找到 → 追加证据 + 升星；未找到 → 新建。
 
-**Output**: Candidate entry list (N-level inform user), merged in step 4 review.
+**输出**：候选条目列表（N 级告知用户），在步骤 4 合并审查时一起处理。
 
 ---
 
-### Step 4 · Candidate Pool Entry Review
+### 步骤 4 · 候选池条目审查
 
-Review ALL entries in `procedural_memory.md` (procedural) and `semantic_memory.md` (semantic) one by one:
+对 `procedural_memory.md`（程序层）和 `semantic_memory.md`（语义层）全部条目逐一过审：
 
-**Activation check**:
-- Entries referenced, validated, or reinforced this week → reset decay timer
+**激活检查**：
+- 本周被引用、验证或强化的条目 → 重置衰减计时器
 
-**Decay check** (entries >4 weeks since discovery or last reference):
+**衰减检查**（距发现日期或上次引用超过 4 周的条目）：
 
-| Current Stars | Decay Handling |
+| 当前星级 | 衰减处理 |
 |---|---|
-| **★★★★★** | Not in this flow (graduation trigger, step 6) |
-| **★★★★** | Ask user "Is this memory still valid?" (approaching graduation, be careful) |
-| **★★★** | Ask user "Is this memory still valid?" (don't force downgrade) |
-| **★★** | Silently downgrade to ★ |
-| **★** | Ask "Can this be deleted, or keep?" (delete/downgrade/keep) |
+| **★★★★★** | 不在此流程（毕业触发，步骤 6 处理） |
+| **★★★★** | 询问用户「这条记忆还成立吗？」（接近毕业，需谨慎） |
+| **★★★** | 询问用户「这条记忆还成立吗？」（不强制降） |
+| **★★** | 静默降为 ★ |
+| **★** | 询问「可以删除了吗，还是保留？」 |
 
-**New candidate merge**:
-- Step 3.5 extraction output merged into formal flow here
-- daily-review flagged but insufficiently verified P/S signals—decide here whether to upgrade
-
----
-
-### Step 5 · Strength Adjustment Execution
-
-Based on step 3.5 + step 4 review results, execute strength adjustments uniformly, write to corresponding candidate pool files (`procedural_memory.md` / `semantic_memory.md`, S-level, direct write).
+**新增候选合并**：
+- 步骤 3.5 产出的新候选，在此并入正式流程
+- daily-review 标记但尚未充分验证的 P/S 信号，在此决定是否升级
 
 ---
 
-### Step 6 · Graduation Check
+### 步骤 5 · 强度调整执行
 
-Scan both candidate pool files for all entries at **★★★★★**. ★★★★★ is the auto-graduation trigger strength.
+根据步骤 3.5 + 步骤 4 的审查结果，统一执行强度调整，逐条写入对应候选池文件（S 级，直接写入）。
 
-**Graduation paths** (by layer):
+---
 
-| Layer | Graduation Destination | Notes |
+### 步骤 6 · 毕业检查
+
+扫描两个候选池文件中所有已达 **★★★★★** 的条目。★★★★★ 为自动毕业触发强度。
+
+**毕业路径**（按层分流）：
+
+| 层 | 毕业目的地 | 说明 |
 |---|---|---|
-| **Semantic** (preferences / cognitive frameworks / value judgments) | `USER/USER.md` | Stable user identity fact, write to user world model |
-| **Procedural** (situation→action patterns) | `SOUL/persona/persona_SOUL.md` | Stable AI behavior pattern, write to persona identity layer |
+| **语义层** | `USER/USER.md` | 已是稳定用户身份事实 |
+| **程序层** | `SOUL/persona/persona_SOUL.md` | 已是稳定 AI 行为模式 |
 
-For each entry meeting graduation criteria:
-1. Determine graduation path (semantic / procedural)
-2. C-level confirmation: report graduation destination to user, wait for per-entry confirmation
-3. After confirmation, write to destination
-4. Mark original candidate pool entry `graduated → [destination] (YYYY-MM-DD)`, preserve audit trail, exclude from decay
-5. Append graduation log to `MEMORY_LOG.md §操作日志`: `YYYY-MM-DD | Graduation: [entry name] → [destination]`
+对每条满足毕业条件的条目：
+1. 判断毕业路径
+2. C 级确认：向用户报告毕业目的地，逐条等待确认
+3. 确认后写入目的地
+4. 原候选池条目标注 `graduated → [目的地] (YYYY-MM-DD)`
+5. 在 `MEMORY_LOG.md §操作日志` 追加毕业流水
 
 ---
 
-### Step 7 · Write MEMORY_LOG Weekly Review Entry
+### 步骤 7 · 写入 MEMORY_LOG 周复盘条目
 
-Append to `MEMORY_LOG.md §周复盘` section **tail** (H3 heading, old-to-new order, newest always at file bottom). This entry **only records memory system metabolism**, not work progress (work goes to LTM §详细周录).
+追加到 `MEMORY_LOG.md §周复盘` 节尾部（三级标题，从旧到新顺序）。本条目**只记记忆系统自身代谢**，工作进展不在此写。
 
-Template:
+模板：
 
 ```
-### YYYY-WNN Weekly Review (YYYY-MM-DD)
+### YYYY-WNN 周复盘（YYYY-MM-DD）
 
-**This week's memory operations**:
-- Semantic new: [entry names] (or "none")
-- Procedural new: [entry names] (or "none")
-- Episodic→schema extraction: [entries extracted from episodic to candidate pool] (or "none")
-- Corrections: [entry name old→new] (or "none")
-- Deletions: [entry name and reason] (or "none")
-- Graduations: [entry name and destination] (or "none")
+**本周记忆操作**：
+- 语义层新增：[条目名称]（如无则「无」）
+- 程序层新增：[条目名称]（如无则「无」）
+- 情景→schema 提取：[本周从情景层提取升级为候选池条目的]（如无则「无」）
+- 修正：[条目名称 原→新]（如无则「无」）
+- 删除：[条目名称及原因]（如无则「无」）
+- 毕业：[条目名称及目的地]（如无则「无」）
 
-**Strength changes**:
-- Upgrades: [entry name ★→★★ etc.] (or "none")
-- Downgrades: [entry name ★★→★ etc.] (or "none")
+**强度变化**：
+- 升级：[条目名称 ★→★★ 等]（如无则「无」）
+- 降级：[条目名称 ★★→★ 等]（如无则「无」）
 
-**Decay handling**: [which entries >4 weeks unreferenced were processed, or "none"]
+**衰减处理**：[处理了哪些超过 4 周未引用的条目，或「无」]
 
-**Review findings**: [issues, patterns, improvements found in memory system operation, or "none"]
+**复盘发现**：[本周记忆系统运行中发现的问题、模式、改进点，或「无」]
 
-**Next week iteration actions**: [memory system level adjustments for next week, or "none"]
+**下周迭代行动**：[记忆系统层面下周要做的调整，或「无」]
 
-**Parameter adjustments**: [decay period/surprise threshold/star ladder parameter changes, or "none"]
+**参数调整**：[衰减周期/惊奇度阈值/星级阶梯等参数变动，或「无」]
 ```
 
 ---
 
-### Step 7.5 · Write ITERATION_LOG (conditional)
+### 步骤 7.5 · 写入 ITERATION_LOG（条件触发）
 
-Condition: This week had any architecture-level change (new skill, workflow change, parameter adjustment, architecture restructuring, protocol iteration).
+条件：本周发生架构级变更（新增 skill、工作流变更、参数调整、架构重构、协议迭代）。
 
-Met → append versioned entry to `ITERATION_LOG.md`.
-Not met → skip.
+满足 → 在 `ITERATION_LOG.md` 追加版本化条目。
+不满足 → 跳过。
 
 ---
 
-After review workflow completes, immediately execute archival:
+复盘流程全部完成后，立即执行归档操作：
 
-**8a · Write Weekly Output Section**
-Append to `_本周.md` progress records tail:
+**8a · 写入本周产出节**
+在 `_本周.md` 进展记录末尾追加：
 ```markdown
 ### 本周产出
 
-[List actual outputs by project/category, one per line: `- filename.md — description`]
+[按项目/类别列出本周实际产出的文件，每条一行：`- 文件名.md — 说明`]
 ```
 
-**8b · Archive Current Week File**
-1. Rename/move `_本周.md` to `_归档/YYYY-Wnn.md` (Wnn from frontmatter `week` field)
-2. Insert current week row at **top** of `LTM.md §时间轴` (timeline is new→old index): `| YYYY-Wnn | date range | one-sentence summary | [_归档/YYYY-Wnn.md] |`
-3. Append current week detailed record at `LTM.md §详细周录` section **tail** (detailed records are old→new, newest always at file bottom):
+**8b · 归档当周文件**
+1. 将 `_本周.md` 重命名/移动为 `_归档/YYYY-Wnn.md`
+2. 在 `LTM.md §时间轴` **顶部插入**当周行：`| YYYY-Wnn | 日期范围 | 一句话概述 | [_归档/YYYY-Wnn.md] |`
+3. 在 `LTM.md §详细周录` 节**尾部追加**当周详细周录节：
    ```markdown
-   ## Wnn · Detailed Weekly Record (YYYY-MM-DD ~ YYYY-MM-DD)
+   ## Wnn · 详细周录（YYYY-MM-DD ~ YYYY-MM-DD）
 
-   - **Project1** — [core advance this week, one paragraph] → `file pointer`
-   - **Project2** — [core advance this week, one paragraph] → `file pointer`
+   - **项目名1** — [本周核心推进，一段话] → `文件指针`
+   - **项目名2** — [本周核心推进，一段话] → `文件指针`
 
-   - **Key insights**: [cross-project reasoning continuity, if any]
+   - **关键认识**：[跨项目的推理连续性，如有]
    ```
 
-**8c · Create New Week File**
-Create new `_本周.md` using standard template:
+**8c · 创建新周文件**
+新建 `_本周.md`，使用标准模板：
 ```markdown
 ---
-title: This Week
+title: 本周
 week: "YYYY-Wnn"
 dates: "YYYY-MM-DD ~ YYYY-MM-DD"
 status: active
 created: YYYY-MM-DD
 ---
 
-# This Week
+# 本周
 
-## Loading Chain
+## 加载链（上下游）
 
-**Upstream:**
-`CLAUDE.md §B startup sequence` — read every session (step 5).
+**上游（由谁加载本文件）：**
+`CLAUDE.md §B 启动序列` — 每次会话必读（步骤 5）。
 
-**Related:**
-- `00 Focus Zone/_归档/` — weekend archival target directory
-
----
-
-## Raw Notes
-
-Paste or dictate your raw thoughts here. This is your unfiltered thinking space. AI will not edit this block—your intentions, questions, and half-formed ideas are preserved in raw form.
+**同级联动：**
+- `00 Focus Zone/_归档/` — 周末归档目标目录
 
 ---
 
-## Task List
+## 原始口述
 
-### This Week's Tasks
+在这里粘贴或口述你的原始想法。这是你未经过滤的思考空间。AI 不会编辑此区块。
 
 ---
 
-## Progress Records
+## 任务清单
 
-> Each work segment format: **Project name** (path) / Related: file list / journal text
+### 本周任务
+
+---
+
+## 进展记录
+
+> 每个工作段格式：**项目名**（路径）/ 关联：文件列表 / 流水账正文
 
 ```
 
-**8d · Archival Completion Report**
-Tell user: "Archival complete. YYYY-Wnn has been stored in _归档/, new week file _本周.md has been created."
+**8d · 归档完成报告**
+向用户说：「归档完成。YYYY-Wnn 已存入 _归档/，新周文件 _本周.md 已创建。」
 
 ---
 
-## Notes
+## 注意事项
 
-- Steps 1-2 give user full space to speak, don't rush to calibrate
-- Decay check must be thorough, don't miss entries
-- Step 8 archival needs no confirmation, it's part of the review workflow
-- If user says "don't archive yet" mid-process, note but skip step 8 this time, force on next Sunday
+- 步骤1-2 给用户充分说话空间，不要急着校准
+- 衰减检查要认真，不要漏条目
+- 步骤8 归档无需询问，是复盘流程的组成部分
+- 如果中途用户表示「先不归档」，记录但本次跳过步骤8，下次周日强制补做

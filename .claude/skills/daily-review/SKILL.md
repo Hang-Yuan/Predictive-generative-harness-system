@@ -1,164 +1,163 @@
 ---
 name: daily-review
-description: End-of-session review workflow. Triggered by farewell phrases (good night / that's all for today). Complete the full review before responding to goodbye.
+description: 对话结束汇总流程。告别语触发（晚安/今天就到这里）。先完整执行汇总流程，再回应道别。
 ---
 
 # daily-review
 
-End-of-session review workflow authority source. session_end.sh detects farewell phrases and injects trigger signal, AI executes this workflow.
+对话结束汇总流程权威源。session_end.sh 检测到告别语后注入触发信号，AI 执行本流程。
 
 ---
 
-## Output Rules
+## 输出规则
 
-**All output as natural conversation paragraphs, no step numbers, no step titles, no workflow labels.** Step numbers are internal execution order reference only, invisible in conversation.
-
----
-
-## Review Workflow (strict order, no skipping)
-
-### Step 1 · Scan P/S signals + Pattern detection
-
-#### 1a. P/S Signal Write
-
-Scan complete conversation, identify all P/S signals, then write:
-
-- **P class** (situation→action patterns) → write to `MEMORY/procedural_memory.md`
-- **S class** (user's cognitive frameworks/positions/work methods/preferences/value judgments) → write to `MEMORY/semantic_memory.md`
-
-**Must deduplicate before writing (check each signal)**:
-1. Check if corresponding candidate pool file already has similar entry
-2. **Has similar entry** → upgrade strength (★→★★→…→★★★★★), append evidence, don't create new
-3. **No similar entry** → create new, initial strength ★
-
-**Relationship with Execution Mode**: High surprise P/S entries during conversation have already been written in real-time (★★★). This step is a **catch-all scan**—picking up missed Medium surprise signals, and dedup/star-upgrade review for already-pooled entries.
-
-#### 1b. Pattern Detection (Learning Loop)
-
-Scan this conversation for repeated operation patterns (not limited to correction signals):
-- A query/organize/format action done 2+ times in this conversation
-- Or highly matching an existing procedural layer entry's context
-
-Matches existing entry → upgrade that entry by one star.
-New pattern not in candidate pool → create new ★ entry.
-
-#### 1c. Graduation Candidate Marking
-
-After upgrade check: if any entry reaches ★★★★★ → **do NOT execute graduation here**, only annotate `[graduation candidate]` next to the entry.
-
-> Graduation execution authority belongs to weekly-review step 6 (sole entry point). daily-review can nominate, upgrade stars, mark candidates, but CANNOT write to USER.md / persona_SOUL.md.
-
-> No signals → skip.
+**所有输出以自然对话段落进行，不输出步骤编号、步骤标题、流程标签。** 步骤编号只是内部执行顺序参考，对话中不可见。
 
 ---
 
-### Step 2 · Scan E-class signals (C-level, write after confirmation)
+## 汇总流程（严格顺序，不可跳步）
 
-Scan if this conversation produced E-class signals (episodic layer).
+### 步骤 1 · 回扫 P/S 信号 + 模式检测
 
-**E-class signal criteria**: conclusion established / open question clarified / stage decision / framework update
+#### 1a. P/S 信号写入
 
-**If E-class signals exist**, generate confirmation table, wait for user confirmation before writing:
+扫描完整对话记录，识别所有 P/S 类信号，然后写入：
 
-| Signal | Content Summary | Suggested Write Location | Confirm? |
-|--------|----------------|--------------------------|----------|
-| [conclusion/open/decision/framework] | [one sentence] | [project main doc §section / research record / literature record] | ✓ / skip |
+- **P 类**（情境→行动模式）→ 写入 `MEMORY/procedural_memory.md`
+- **S 类**（用户的认知框架/立场/工作方式/偏好/价值判断）→ 写入 `MEMORY/semantic_memory.md`
 
-Wait for user confirmation. User says "skip" or no response → skip entirely.
+**写入前必须去重（每条信号都要检查）**：
+1. 检查对应候选池文件是否已有内容相似的条目
+2. **有相似条目** → 升级强度（★→★★→…→★★★★★），追加证据，不新建
+3. **无相似条目** → 新建，初始强度 ★
 
-**E-class write location** (determined by current work context):
-- Currently in `01 Projects/[X]` → that project's main doc corresponding section
-- Currently in `02 Reading/[Y]` → that note / reading record file
-- Currently in `03 Writing/[Z]` → that work's corresponding section
-- Cross-context general conclusion → LTM.md §当前处境 or `_本周.md`
+**与 Execution Mode 的关系**：对话过程中 High 惊奇度的 P/S 条目已即时入池（★★★）。此步骤是**兜底扫描**——捡起对话中遗漏的 Medium 惊奇度信号，以及对已入池条目做去重/升星复核。
 
-**Cross-project pointers (C-level confirmation)**: If an E-class conclusion affects multiple projects, write to authority location, then list affected projects in confirmation table for user approval. Only add pointers (`→ Authority source: [ProjectX/main-doc §section]`) in those projects. Do not copy conclusion content, only pointers.
+#### 1b. 模式检测（学习环）
 
-**No unauthorized modification of project files.**
+扫描本次对话，识别重复操作模式（不限于纠正信号）：
+- 某个查询/整理/格式化动作在本次对话中做了 2 次以上
+- 或与现有程序层条目描述的情境高度匹配
 
-No E-class signals → skip.
+匹配现有条目 → 对应条目升级一颗星。
+新模式且不在候选池中 → 新建 ★ 条目。
+
+#### 1c. 毕业候选标记
+
+升级后检查：若任何条目达到 ★★★★★ → **不在此执行毕业**，仅在条目旁标注 `[毕业候选]`。
+
+> 毕业执行权归 weekly-review 步骤 6（唯一入口）。daily-review 可提名、升星、标记候选，但不可写入 USER.md / persona_SOUL.md。
+
+> 无信号则跳过。
 
 ---
 
-### Step 3 · Update LTM.md current situation
+### 步骤 2 · 回扫 E 类信号（C 级，汇总确认后写入）
 
-Condition: This conversation had substantive change in main priorities or project status.
+扫描本次对话是否产出 E 类信号（情景层）。
 
-Has change → overwrite `LTM.md §当前处境` (S-level, direct write).
-No change → skip.
+**E 类信号判断标准**：结论确立 / 悬置点明确 / 阶段决策 / 框架更新
+
+**如有 E 类信号**，生成确认表，等待用户确认后执行写入：
+
+| 信号 | 内容摘要 | 建议写入位置 | 确认？ |
+|------|---------|-------------|--------|
+| [结论/悬置/决策/框架] | [一句话描述] | [项目主文档 §节名 / 研究记录 / 文献记录] | ✓ / 跳过 |
+
+等待用户确认。用户说「跳过」或不回应则整体跳过。
+
+**E 类写入位置**（由当前工作上下文决定）：
+- 当前在 `01 Projects/[X]` → 该项目主文档对应节
+- 当前在 `02 Reading/[Y]` → 该笔记 / 读书记录文件
+- 当前在 `03 Writing/[Z]` → 该作品对应节
+- 跨上下文通用结论 → LTM.md §当前处境 或 `_本周.md`
+
+**跨项目指针（C 级确认）**：若某条 E 类结论同时影响多个项目，写入权威落点后，在确认表中额外列出受影响的其他项目，等用户确认后在这些项目文档中添加指针（`→ 权威源：[项目X/主文档 §节名]`）。不复制结论内容，只写指针。
+
+**禁止未经确认直接修改项目文件。**
+
+无 E 类信号则跳过。
 
 ---
 
-### Step 4 · Write _本周.md today's progress
+### 步骤 3 · 更新 LTM.md 当前处境
 
-Append today's work segment to `_本周.md §进展记录` (S-level, direct write).
+条件：本次对话中主要矛盾或项目状态有实质变化。
 
-**Date section**: Find or create today's date section `### DayOfWeek YYYY-MM-DD`.
+有变化 → 覆盖更新 `LTM.md §当前处境`（S 级，直接写入）。
+无变化 → 跳过。
 
-**Each work segment format** (one per project worked on):
+---
+
+### 步骤 4 · 写入 _本周.md 今日进展
+
+在 `_本周.md §进展记录` 追加今日工作段（S 级，直接写入）。
+
+**日期节**：找到或新建今日日期节 `### 周X YYYY-MM-DD`。
+
+**每个工作段格式**（有几个项目写几段）：
 
 ```markdown
-**Project Name** (`project root path`)
-Related: `file1.md` · `file2.md`
+**项目名称**（`项目根目录路径`）
+关联：`具体文件1.md` · `具体文件2.md`
 
-- What was done today (journal style, no theoretical derivation details)
-- What decisions were made
-- What was completed, progress status
+- 今天做了什么（流水账，不记理论推导细节）
+- 确立了什么决策
+- 完成了什么，推进到哪里
 ```
 
-> `Related:` field is the anchor point for continuity checks. Must accurately list files actually modified or deeply read in this session.
+> `关联：` 字段是接续检查的锚点，必须准确列出本次实际修改或深度阅读的文件名。
 
 ---
 
-### Step 5 · (Deprecated)
+### 步骤 5 ·（已废弃）
 
-Skip.
-
----
-
-### Step 6 · Write MEMORY_LOG.md (conditional)
-
-Condition: This session had **memory system metabolism**:
-- Candidate pool entry changes (new / correction / deletion / star upgrade / star downgrade)
-
-Met → append record to `MEMORY_LOG.md §操作日志` tail, format: `YYYY-MM-DD | [type]: [brief description]`.
-Not met → skip.
+跳过。
 
 ---
 
-### Step 6b · Write ITERATION_LOG.md (conditional)
+### 步骤 6 · 写入 MEMORY_LOG.md（条件触发）
 
-Condition: This session had any **architecture-level change**:
-- System architecture changes (file structure / protocol rules / inheritance chain / loading chain)
-- Skill creation / rewrite / deprecation
-- Persona file changes
-- Memory system protocol iteration
-- Hook script rewrites
+条件：本次会话发生**记忆系统代谢**：候选池条目变更（新增 / 修正 / 删除 / 升星 / 降星）
 
-Met → append versioned entry to `ITERATION_LOG.md §变更记录` tail (`vX.Y.Z · date · type`, with summary/details/impact/trigger/related).
-Not met → skip.
+满足 → 追加记录到 `MEMORY_LOG.md §操作日志` 尾部，格式：`YYYY-MM-DD | [类型]：[简要描述]`。
+不满足 → 跳过。
 
 ---
 
-### Step 6.5 · Weekly review (Sunday conditional trigger)
+### 步骤 6b · 写入 ITERATION_LOG.md（条件触发）
 
-Condition: Today is **Sunday**.
+条件：本次会话发生以下任一**架构级变更**：
+- 系统架构变更（文件结构 / 协议规则 / 继承链 / 加载链）
+- 技能创建 / 重写 / 废弃
+- 人格文件变动
+- 记忆系统协议迭代
+- Hook 脚本重写
 
-Met → execute `weekly-review` skill full workflow.
-
-> Authority source: `~/.claude/skills/weekly-review/SKILL.md`
-
-Not met → skip.
-
----
-
-### Step 7 · Respond to farewell
-
-After all steps complete, respond to user's goodbye.
+满足 → 在 `ITERATION_LOG.md §变更记录` 节尾部追加版本化条目（`vX.Y.Z · 日期 · 类型`）。
+不满足 → 跳过。
 
 ---
 
-## Loading Chain
+### 步骤 6.5 · 周复盘（周日条件触发）
 
-**Upstream trigger**: `~/.claude/hooks/session_end.sh` → detect farewell → inject additionalContext
-**Downstream files**: `MEMORY/procedural_memory.md`, `MEMORY/semantic_memory.md`, `LTM.md`, `_本周.md`, `MEMORY_LOG.md`, `ITERATION_LOG.md`, weekly-review skill (Sunday trigger)
+条件：当日为**周日**。
+
+满足 → 执行 `weekly-review` skill 完整流程。
+
+> 权威源：`~/.claude/skills/weekly-review/SKILL.md`
+
+不满足 → 跳过。
+
+---
+
+### 步骤 7 · 回应道别
+
+全部流程完成后，回应用户的告别语。
+
+---
+
+## 加载链
+
+**上游触发**：`~/.claude/hooks/session_end.sh` → 检测告别语 → 注入 additionalContext
+**下游文件**：`MEMORY/procedural_memory.md`、`MEMORY/semantic_memory.md`、`LTM.md`、`_本周.md`、`MEMORY_LOG.md`、`ITERATION_LOG.md`、weekly-review skill（周日触发）

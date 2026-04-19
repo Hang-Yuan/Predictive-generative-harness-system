@@ -2,66 +2,66 @@
 title: USER.md
 type: system-instruction
 priority: 0
-description: User identity main file—core information and sub-file index.
+description: 用户身份主档——核心信息与子文件索引。
 created: YYYY-MM-DD
 ---
 
 # USER.md
 
-## Loading Chain
+## 加载链
 
-**Upstream:**
-`CLAUDE.md §B startup sequence` — read every session (step 2).
+**上游：**
+`CLAUDE.md §B 启动序列` — 每次会话必读（步骤 2）。
 
-**Managed files (downstream):**
-- `USER/background.md` — personal background and experience
-- `USER/personality.md` — personality assessments and behavioral patterns
-- `USER/cognition.md` — cognitive profile and learning style
-- `USER/beliefs.md` — core beliefs and action logic
+**管辖文件（下游）：**
+- `USER/background.md` — 个人背景与经历
+- `USER/personality.md` — 人格测评与行为模式
+- `USER/cognition.md` — 认知画像与学习风格
+- `USER/beliefs.md` — 核心信念与行动逻辑
 
-**Related:**
-- `MEMORY/procedural_memory.md` + `MEMORY/semantic_memory.md` — USER.md defines identity traits, candidate pools record dynamic evolution
-
----
-
-## System Notes
-
-This file is the main profile, loaded every startup, contains summary-level information only. Detailed content is distributed in sub-files, loaded on demand:
-
-| Sub-file | Path | Load Trigger Keywords |
-|----------|------|----------------------|
-| Background | `USER/background.md` | experience, timeline, education, publications |
-| Personality | `USER/personality.md` | MBTI, Big Five, personality, behavioral patterns |
-| Cognition | `USER/cognition.md` | IQ, learning style, cognitive traits, intelligence |
-| Beliefs | `USER/beliefs.md` | values, core beliefs, action logic, philosophy |
+**同级联动：**
+- `MEMORY/procedural_memory.md` + `MEMORY/semantic_memory.md` — USER.md 定义身份特质，候选池记录动态演变
 
 ---
 
-## Core Identity
+## 系统说明
 
-- **Name**: [Your name or handle]
-- **Current Status**: [What you're currently doing]
+本文件为主档，每次启动加载，只含摘要级信息。详细内容分布在子文件中，按需加载：
 
-### Current Roles
-
-- [Role 1: e.g., PhD applicant in X field]
-- [Role 2: e.g., Startup founder in Y domain]
-- [Role 3: e.g., Independent researcher on Z topic]
-
----
-
-## Cognitive Patterns
-
-- [Describe your thinking style, e.g., model-driven, abstraction-heavy, etc.]
-- [How you approach problems]
-- [Your verification standards]
-- [Your information processing preferences]
+| 子文件 | 路径 | 加载触发词 |
+|--------|------|-----------|
+| 背景经历 | `USER/background.md` | 经历、时间线、教育、发表 |
+| 人格测评 | `USER/personality.md` | MBTI、大五、人格、行为模式 |
+| 认知画像 | `USER/cognition.md` | IQ、学习风格、认知特征、智力 |
+| 信念体系 | `USER/beliefs.md` | 价值观、核心信念、行动逻辑、哲学立场 |
 
 ---
 
-## Collaboration Notes
+## 核心身份
 
-- [What the AI should know about working with you]
-- [Communication preferences]
-- [Things that annoy you or don't work]
-- [What you value in interactions]
+- **姓名**：[你的姓名或代号]
+- **当前状态**：[你当前在做什么]
+
+### 当前角色
+
+- [角色 1：例如 X 方向 PhD 申请者]
+- [角色 2：例如 Y 领域创业者]
+- [角色 3：例如 Z 主题独立研究者]
+
+---
+
+## 认知模式
+
+- [描述你的思维风格，例如建模驱动、高度抽象等]
+- [你处理问题的路径]
+- [你的验证标准]
+- [你的信息处理偏好]
+
+---
+
+## 协作注意事项
+
+- [AI 与你协作时需要知道的事]
+- [沟通偏好]
+- [让你不耐烦或无效的做法]
+- [你重视的互动方式]

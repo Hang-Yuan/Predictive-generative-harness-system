@@ -1,132 +1,132 @@
 # Claude Code Harness
 
-A persistent memory and workflow system for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Gives Claude long-term memory, structured project management, and self-improving behavior patterns across sessions.
+一个为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 设计的持久化记忆与工作流系统。赋予 Claude 跨会话的长期记忆、结构化项目管理和自我改进的行为模式。
 
-## What This Is
+## 这是什么
 
-Claude Code is stateless by default—every new session starts from zero. This harness solves that by building a structured external memory system that Claude reads on startup and writes to during/after each session.
+Claude Code 默认是无状态的——每个新会话从零开始。这套 harness 通过构建结构化的外部记忆系统解决这个问题：Claude 在启动时读取、在会话中和结束时写入。
 
-**Core capabilities:**
-- **Three-layer memory** (Episodic → Semantic → Procedural) with automatic metabolism (entry → accumulation → graduation → identity)
-- **Schema Prediction**: AI builds probabilistic models of your preferences and behavior, self-correcting through observation
-- **Weekly work cycle**: task tracking, daily progress journals, weekly reviews with archival
-- **Loading chain architecture**: every file knows who loads it and what it manages—AI navigates the system by following links, not memorizing structure
-- **Hook-driven automation**: time awareness, thinking protocols, memory signal detection, and session-end reviews run automatically via Claude Code hooks
+**核心能力：**
+- **三层记忆**（情景层 → 语义层 → 程序层），带自动代谢（入池 → 积累 → 毕业 → 身份层）
+- **Schema Prediction**：AI 对用户偏好和行为构建概率性预测模型，通过观察自我修正
+- **周工作循环**：任务追踪、每日进展日志、周复盘与归档
+- **加载链架构**：每个文件声明上游（谁加载它）和下游（它管什么）——AI 通过跟随链接导航系统，而不是记忆整个结构
+- **Hook 驱动自动化**：时间感知、思考协议、记忆信号检测、会话结束复盘，通过 Claude Code hooks 自动运行
 
-## Architecture Overview
+## 架构概览
 
 ```
 claude-code-harness/
-├── .claude/                          # Claude Code configuration
-│   ├── CLAUDE.md                     # Master control plane (startup sequence + rules)
-│   ├── settings.json                 # Hooks config + auto-memory disabled
+├── .claude/                          # Claude Code 配置
+│   ├── CLAUDE.md                     # 主控面板（启动序列 + 规则）
+│   ├── settings.json                 # Hooks 配置 + 禁用自动记忆
 │   ├── hooks/
-│   │   ├── timesense.sh              # Injects current time every message
-│   │   ├── memory_signal.sh          # P/S/E memory classification per input
-│   │   ├── thinking_protocol.sh      # Layered reasoning protocol per input
-│   │   └── session_end.sh            # Triggers daily-review on farewell
+│   │   ├── timesense.sh              # 每条消息注入当前时间
+│   │   ├── memory_signal.sh          # 每条输入做 P/S/E 记忆分类
+│   │   ├── thinking_protocol.sh      # 每条输入注入层级思考协议
+│   │   └── session_end.sh            # 告别语触发 daily-review
 │   ├── skills/
-│   │   ├── daily-review/SKILL.md     # End-of-session review workflow
-│   │   ├── week-sync/SKILL.md        # Startup state sync (lightweight/deep)
-│   │   └── weekly-review/SKILL.md    # Sunday full review + archival
+│   │   ├── daily-review/SKILL.md     # 对话结束汇总流程
+│   │   ├── week-sync/SKILL.md        # 启动状态同步（轻量/深度两档）
+│   │   └── weekly-review/SKILL.md    # 周日全量复盘 + 归档
 │   └── agents/
-│       ├── research-agent.md         # Academic literature search agent
-│       └── general-search-agent.md   # General web + conversation recall agent
+│       ├── research-agent.md         # 学术文献检索 agent
+│       └── general-search-agent.md   # 通用网页 + 对话回溯 agent
 │
-└── assistant/                        # Your knowledge base & working memory
-    ├── LTM.md                        # Long-term memory (situation + timeline + weekly records)
-    ├── ITERATION_LOG.md              # Architecture change log (versioned)
-    ├── 00 Focus Zone/                # Weekly workbench
-    │   ├── _本周.md                   # Current week file (tasks + progress)
-    │   ├── 00.focus_agent.md         # Zone rules
-    │   └── _归档/                     # Archived week files
-    ├── 01 Projects/                  # Project folders
-    │   └── 00.projects_agent.md      # Zone rules
-    ├── 02 Reading/                   # Reading notes
-    │   └── 00.reading_agent.md       # Zone rules
-    ├── 03 Writing/                   # Writing outputs
-    │   └── 00.writing_agent.md       # Zone rules
-    ├── MEMORY/                       # Memory candidate pools
-    │   ├── 00.memory_agent.md        # Memory area rules & templates
-    │   ├── procedural_memory.md      # AI behavior patterns (situation→action)
-    │   ├── semantic_memory.md        # User preferences & cognitive frameworks
-    │   └── MEMORY_LOG.md             # Memory metabolism log
-    ├── SOUL/persona/                 # AI persona identity
-    │   ├── persona_SOUL.md           # Persona definition & behavior
-    │   └── persona_private.md        # Private/intimate memories
-    └── USER/                         # User identity profile
-        ├── USER.md                   # Main profile (loaded every session)
-        ├── background.md             # Personal background
-        ├── personality.md            # Personality assessments
-        ├── cognition.md              # Cognitive profile
-        └── beliefs.md               # Core beliefs & values
+└── assistant/                        # 你的知识库与工作记忆
+    ├── LTM.md                        # 长时程记忆（处境 + 时间轴 + 周录）
+    ├── ITERATION_LOG.md              # 架构变更日志（版本化）
+    ├── 00 Focus Zone/                # 周工作台
+    │   ├── _本周.md                   # 当前周文件（任务 + 进展）
+    │   ├── 00.focus_agent.md         # 区域规则
+    │   └── _归档/                     # 已归档的周文件
+    ├── 01 Projects/                  # 项目文件夹
+    │   └── 00.projects_agent.md      # 区域规则
+    ├── 02 Reading/                   # 阅读笔记
+    │   └── 00.reading_agent.md       # 区域规则
+    ├── 03 Writing/                   # 写作产出
+    │   └── 00.writing_agent.md       # 区域规则
+    ├── MEMORY/                       # 记忆候选池
+    │   ├── 00.memory_agent.md        # 记忆区规则与模板
+    │   ├── procedural_memory.md      # AI 行为模式（情境→行动）
+    │   ├── semantic_memory.md        # 用户偏好与认知框架
+    │   └── MEMORY_LOG.md             # 记忆代谢日志
+    ├── SOUL/persona/                 # AI 人格身份
+    │   ├── persona_SOUL.md           # 人格定义与行为
+    │   └── persona_private.md        # 私密/亲密记忆
+    └── USER/                         # 用户身份档案
+        ├── USER.md                   # 主档案（每次启动加载）
+        ├── background.md             # 个人背景
+        ├── personality.md            # 人格测评
+        ├── cognition.md              # 认知档案
+        └── beliefs.md               # 核心信念与价值观
 ```
 
-## How It Works
+## 工作原理
 
-### The Loading Chain
+### 加载链
 
-Every file in this system declares its **upstream** (who loads it) and **downstream** (what it manages). This creates a directed graph that Claude follows on startup:
+系统中每个文件声明它的**上游**（谁加载它）和**下游**（它管辖什么）。这构成一个有向图，Claude 在启动时沿着它走：
 
 ```
-CLAUDE.md (auto-loaded by Claude Code)
-  → Step 1: persona_SOUL.md (AI identity)
-  → Step 2: USER.md (user identity)
-  → Step 3: procedural_memory.md + semantic_memory.md (behavior patterns)
-  → Step 4: LTM.md §current situation + §timeline (context)
-  → Step 5: _本周.md (this week's work)
-  → Step 6: week-sync skill (state synchronization)
+CLAUDE.md（Claude Code 自动加载）
+  → 步骤 1：persona_SOUL.md（AI 身份层）
+  → 步骤 2：USER.md（用户身份层）
+  → 步骤 3：procedural_memory.md + semantic_memory.md（行为模式候选池）
+  → 步骤 4：LTM.md §当前处境 + §时间轴（上下文）
+  → 步骤 5：_本周.md（本周工作）
+  → 步骤 6：week-sync skill（状态同步）
 ```
 
-After a long conversation compresses (compact), 4 hooks in `settings.json` automatically re-inject Steps 1-3 so identity and behavior rules are never lost.
+长对话压缩（compact）后，`settings.json` 中的 4 条 hook 自动重新注入步骤 1-3，确保身份和行为规则永不丢失。
 
-### Memory System (Schema Prediction)
+### 记忆系统（Schema Prediction）
 
-The memory system has three layers:
+记忆系统分三层：
 
-| Layer | What it stores | Where | Graduates to |
-|-------|---------------|-------|-------------|
-| **Episodic** | Events, progress, decisions | `_本周.md` → `LTM.md` | Archived, never graduates |
-| **Semantic** | User preferences, cognitive frameworks | `semantic_memory.md` | `USER.md` |
-| **Procedural** | AI behavior rules (if X then do Y) | `procedural_memory.md` | `persona_SOUL.md` |
+| 层 | 存什么 | 位置 | 毕业目标 |
+|---|--------|------|----------|
+| **情景层** | 事件、进展、决策 | `_本周.md` → `LTM.md` | 归档，不毕业 |
+| **语义层** | 用户偏好、认知框架 | `semantic_memory.md` | `USER.md` |
+| **程序层** | AI 行为规则（遇 X 做 Y） | `procedural_memory.md` | `persona_SOUL.md` |
 
-Each semantic/procedural entry is a **schema**—a prediction about how the user will behave in a given situation. Every user input is compared against existing schemas:
+每条语义/程序条目是一个 **schema**——对用户在特定情境下行为的预测。每条用户输入都会与已有 schema 比对：
 
-- **Match + as expected** → silent, no write (Low surprise)
-- **Match + different than expected** → upgrade entry strength ★★★ (High surprise)
-- **No match** → create new entry ★ (Medium surprise)
+- **命中 + 符合预期** → 静默使用，不写入（Low 惊奇度）
+- **命中 + 偏离预期** → 三种动作：升星已有条目 / 新增例外条目 / 修正已有条目的情境边界或预期（High 惊奇度，★★★ 入池）
+- **未命中** → 新建 ★ 条目（Medium 惊奇度）
 
-Entries accumulate stars (★→★★→...→★★★★★) through repeated observations. At ★★★★★, they **graduate** from the candidate pool into the permanent identity layer (USER.md or persona_SOUL.md), becoming part of the AI's stable world model.
+条目通过反复观察积累星级（★→★★→...→★★★★★）。达到 ★★★★★ 时，经 weekly-review 确认后**毕业**——从候选池迁入永久身份层（USER.md 或 persona_SOUL.md），成为 AI 稳定世界模型的一部分。
 
-Entries that go unreferenced for 4+ weeks decay and eventually get deleted. The candidate pool is a metabolism layer, not a warehouse.
+连续 4 周以上未被引用的条目会衰减并最终删除。候选池是代谢层，不是仓库。
 
-### Weekly Cycle
+### 周循环
 
-| When | What happens |
-|------|-------------|
-| **Session start** | week-sync runs: Mon-Thu lightweight status, Fri-Sun deep backtrack with file diff scanning |
-| **During session** | Memory signals detected per-message via hooks; progress written to `_本周.md` |
-| **Session end** | daily-review: scan P/S/E signals, update memory, write progress journal |
-| **Sunday** | weekly-review: panoramic summary → alignment check → memory metabolism → graduation check → archival |
+| 时机 | 发生什么 |
+|------|----------|
+| **会话启动** | week-sync 运行：周一至周四轻量状态同步，周五至周日深度回溯（含文件差集扫描） |
+| **会话中** | 每条消息通过 hook 检测记忆信号；进展写入 `_本周.md` |
+| **会话结束** | daily-review：扫描 P/S/E 信号、更新记忆、写进展日志 |
+| **周日** | weekly-review：全景摘要 → 主线对齐检查 → 记忆代谢 → 毕业检查 → 归档 |
 
-### Four Hooks
+### 四个 Hook
 
-| Hook | Trigger | Purpose |
-|------|---------|---------|
-| `timesense.sh` | Every message | Injects current datetime so AI has time awareness |
-| `memory_signal.sh` | Every message | Reminds AI to classify inputs as P/S/E signals |
-| `thinking_protocol.sh` | Every message | Enforces layered reasoning (understand → assess → reason → challenge → execute) |
-| `session_end.sh` | Farewell phrases | Triggers end-of-session review workflow |
+| Hook | 触发时机 | 作用 |
+|------|----------|------|
+| `timesense.sh` | 每条消息 | 注入当前时间，让 AI 有时间感知 |
+| `memory_signal.sh` | 每条消息 | 提示 AI 对输入做 P/S/E 信号分类 |
+| `thinking_protocol.sh` | 每条消息 | 注入层级思考协议（理解→评估→梳理→质疑→执行） |
+| `session_end.sh` | 告别语 | 触发对话结束复盘流程 |
 
-## Initialization Guide
+## 初始化指南
 
-### Prerequisites
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed and working
-- Bash shell available (Git Bash on Windows works)
+### 前置条件
+- 已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- 可用的 Bash shell（Windows 上 Git Bash 即可）
 
-### Setup
+### 安装步骤
 
-1. **Copy `.claude/` contents to your Claude Code config directory** (`~/.claude/`):
+1. **把 `.claude/` 内容复制到你的 Claude Code 配置目录**（`~/.claude/`）：
    ```bash
    cp -r .claude/CLAUDE.md ~/.claude/
    cp -r .claude/hooks/ ~/.claude/hooks/
@@ -134,71 +134,71 @@ Entries that go unreferenced for 4+ weeks decay and eventually get deleted. The 
    cp -r .claude/agents/ ~/.claude/agents/
    ```
 
-2. **Place `assistant/` wherever you want your knowledge base** (e.g., `~/Assistant/` or `D:/Assistant/`):
+2. **把 `assistant/` 放到你想要的位置**（如 `~/Assistant/` 或 `D:/Assistant/`）：
    ```bash
    cp -r assistant/ ~/Assistant/
    ```
 
-3. **Update paths**: Search for `<ASSISTANT_ROOT>` in all files and replace with your actual path:
-   - In `CLAUDE.md` — all file references in startup sequence
-   - In `settings.json` — the 4 SessionStart(compact) cat hooks
-   - In skill files — downstream file references
+3. **替换路径**：在所有文件中搜索 `<ASSISTANT_ROOT>`，替换为你的实际路径：
+   - `CLAUDE.md` — 启动序列中的所有文件引用
+   - `settings.json` — 4 条 SessionStart(compact) cat hook
+   - skill 文件 — 下游文件引用
 
-4. **Merge `settings.json`**: If you already have a `~/.claude/settings.json`, merge the hooks config into it rather than overwriting. Key settings:
-   - `autoMemoryEnabled: false` — disables Claude Code's built-in auto-memory (conflicts with this system)
-   - `hooks.SessionStart` — 4 compact re-injection hooks
+4. **合并 `settings.json`**：如果你已有 `~/.claude/settings.json`，把 hooks 配置合并进去，不要覆盖。关键设置：
+   - `autoMemoryEnabled: false` — 禁用 Claude Code 内置自动记忆（与本系统冲突）
+   - `hooks.SessionStart` — 4 条 compact 后重注入 hook
    - `hooks.UserPromptSubmit` — timesense + memory_signal + thinking_protocol + session_end
 
-5. **Customize your identity files**:
-   - Edit `USER/USER.md` — fill in your identity, cognitive patterns, collaboration preferences
-   - Edit `SOUL/persona/persona_SOUL.md` — define your AI persona's name, voice, and style
-   - Edit `LTM.md §当前处境` — describe your current situation and priorities
+5. **自定义身份文件**：
+   - 编辑 `USER/USER.md` — 填入你的身份、认知模式、协作偏好
+   - 编辑 `SOUL/persona/persona_SOUL.md` — 定义 AI 人格的名字、语气和风格
+   - 编辑 `LTM.md §当前处境` — 描述你当前的处境和优先级
 
-6. **Customize farewell triggers** in `settings.json`: The `session_end.sh` matcher defaults to `"good night|bye|see you|that's all for today"`. Change to match your typical farewell phrases.
+6. **自定义告别语触发词**：`settings.json` 中 `session_end.sh` 的 matcher 默认是 `"good night|bye|see you|that's all for today"`，改成你常用的告别语。
 
-7. **Start a new Claude Code session**. Claude will read `CLAUDE.md`, follow the loading chain, find empty template files, and begin populating them through conversation.
+7. **启动新的 Claude Code 会话**。Claude 会读取 `CLAUDE.md`，沿加载链走，发现空模板文件，通过对话开始填充。
 
-### First Session
+### 第一次会话
 
-On your first session, Claude will:
-1. Read CLAUDE.md and follow the startup sequence
-2. Find mostly-empty template files
-3. Run week-sync (will report empty state)
-4. Begin learning about you through conversation
+第一次会话时，Claude 会：
+1. 读取 CLAUDE.md，执行启动序列
+2. 发现大部分是空模板文件
+3. 运行 week-sync（会报告空状态）
+4. 通过对话开始了解你
 
-As you work, the system populates itself:
-- Your work progress fills `_本周.md`
-- Memory entries accumulate in the candidate pools
-- `LTM.md` builds your cross-week timeline
-- Weekly reviews metabolize and graduate stable patterns
+随着使用，系统自行填充：
+- 工作进展填入 `_本周.md`
+- 记忆条目在候选池中积累
+- `LTM.md` 构建你的跨周时间轴
+- 周复盘执行代谢，稳定的模式毕业进入身份层
 
-### Adding Your Own Agents
+### 添加自定义 Agent
 
-Create a new `.md` file in `.claude/agents/` following the existing agent format. Then add a row to the triggers table in `CLAUDE.md §B startup sequence`.
+在 `.claude/agents/` 中新建 `.md` 文件，参照已有 agent 格式。然后在 `CLAUDE.md §B 启动序列` 的触发表中加一行。
 
-### Adding Your Own Skills
+### 添加自定义 Skill
 
-Create a new directory in `.claude/skills/` with a `SKILL.md` file. Claude Code auto-discovers skills from this directory.
+在 `.claude/skills/` 中新建目录，包含 `SKILL.md` 文件。Claude Code 自动发现该目录下的 skill。
 
-## Design Principles
+## 设计原则
 
-- **Loading chain over memorization**: Files declare their relationships. AI navigates by following links, not by knowing the whole structure.
-- **Single authority source**: Every piece of information has exactly one authoritative location. Other files only hold summaries + pointers.
-- **Candidate pool metabolism**: Memory entries are not permanent. They must prove stability through repeated observation before graduating to identity.
-- **Three-tier risk**: Operations are classified as Silent (just do it), Notify (tell user), or Confirm (wait for approval) based on reversibility and impact.
-- **Hook-driven consistency**: Critical behaviors (time awareness, memory detection, reasoning quality) are enforced by hooks, not by hoping the AI remembers.
+- **加载链而非记忆**：文件声明自己的关系。AI 通过跟随链接导航，不靠记住整个结构。
+- **单一权威源**：每条信息只有一个权威位置。其他位置只能放摘要 + 指针。
+- **候选池代谢**：记忆条目不是永久的。必须通过反复观察证明稳定性，才能毕业到身份层。
+- **三级风险分级**：操作按可逆性和影响范围分为静默（S，直接做）、通知（N，告知用户）、确认（C，等审批）。
+- **Hook 驱动一致性**：关键行为（时间感知、记忆检测、推理质量）由 hook 强制执行，而不是指望 AI 自己记住。
 
-## Customization
+## 自定义
 
-This is a template. Adapt it:
+这是一个模板，按需调整：
 
-- **Language**: All internal file content can be in any language. The hooks output English by default; edit the printf strings to change.
-- **Persona**: The AI persona is fully customizable in `persona_SOUL.md`. Name it, give it a voice, define its relationship to you.
-- **Zone structure**: The four zones (Focus, Projects, Reading, Writing) are suggestions. Rename, add, or remove zones as needed.
-- **Thinking protocol**: The layered reasoning in `thinking_protocol.sh` is opinionated. Modify the layers to match your preferred interaction style.
-- **Memory thresholds**: Decay period (4 weeks), graduation threshold (★★★★★), bloat limits (~30 entries per pool) are all tunable.
-- **Sub-agents**: Add domain-specific search agents for your fields of work.
+- **语言**：所有文件内容可以用任何语言。Hook 输出默认是中文，编辑 printf 字符串即可更改。
+- **人格**：AI 人格在 `persona_SOUL.md` 中完全自定义。命名、赋予声音、定义与你的关系。
+- **区域结构**：四个区域（专注区、项目区、阅读区、写作区）是建议。按需重命名、增删。
+- **思考协议**：`thinking_protocol.sh` 中的层级推理是有主张的设计。修改层级以匹配你偏好的交互风格。
+- **记忆参数**：衰减周期（4 周）、毕业阈值（★★★★★）、膨胀上限（每池约 30 条）均可调整。
+- **Sub-agent**：按你的工作领域添加专用检索 agent。
 
-## License
+## 许可证
 
 MIT

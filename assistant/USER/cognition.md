@@ -1,1 +1,1 @@
-[This is a placeholder sub-file. Fill in your cognitive profile and learning style.]
+[占位子文件。在此填写你的认知画像与学习风格。]

@@ -1,1 +1,1 @@
-[This is a placeholder sub-file. Fill in your core beliefs and action logic.]
+[占位子文件。在此填写你的核心信念与行动逻辑。]

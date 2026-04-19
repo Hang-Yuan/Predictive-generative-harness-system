@@ -1,62 +1,62 @@
 ---
 title: LTM.md
 type: long-term-memory
-description: Long-term work memory—current situation (top snapshot) + timeline (one row per week index) + detailed weekly records (by project, with file pointers)
+description: 跨周工作记忆——当前处境（顶部快照）+ 时间轴（每周一行索引）+ 详细周录（按项目，附文件指针）
 version: 2.0
 created: YYYY-MM-DD
 ---
 
-# Long-Term Memory (LTM)
+# 跨周工作记忆（LTM）
 
-Cross-week work memory authority source. Four-layer structure: **Current Situation** (top snapshot: main/secondary priorities + major projects + transition predictions) → **Timeline** (one row per week index, new→old) → **Detailed Weekly Records** (by project, old→new append) → Archive files (complete discussion process).
+跨周工作记忆权威源。四层结构：**当前处境**（顶部快照：主要矛盾/次要矛盾 + 大项目 + 转换预判）→ **时间轴**（每周一行索引，新→旧）→ **详细周录**（按项目，从旧到新追加）→ 归档文件（完整讨论过程）。
 
 ---
 
-## Loading Chain
+## 加载链
 
-**Upstream:**
-`CLAUDE.md §B startup sequence` — read `§当前处境` + `§时间轴` every session (step 4); specific weekly records expanded on demand.
+**上游：**
+`CLAUDE.md §B 启动序列` — 每次会话读取 `§当前处境` + `§时间轴`（步骤 4）；具体周录按需展开。
 
-**Related:**
-- `MEMORY/` — MEMORY handles L2/L3 memory entries; current situation snapshot lives at top of this file
-- `00 Focus Zone/_本周.md` — this week's progress in _本周.md, cross-week nodes and current situation in LTM
-- `MEMORY/MEMORY_LOG.md` — memory metabolism goes to MEMORY_LOG, work memory goes to LTM
+**同级联动：**
+- `MEMORY/` — MEMORY 处理 L2/L3 记忆条目；当前处境快照住在本文件顶部
+- `00 Focus Zone/_本周.md` — 本周进展放 _本周.md，跨周节点与当前处境放 LTM
+- `MEMORY/MEMORY_LOG.md` — 记忆代谢走 MEMORY_LOG，工作记忆走 LTM
 
 ---
 
 ## 当前处境
 
-> Snapshot section. Main priorities / secondary priorities / major projects / transition predictions / last unresolved. S-level, direct overwrite, not historical record.
+> 快照节。主要矛盾 / 次要矛盾 / 大项目 / 转换预判 / 上次悬置。S 级，直接覆盖，不留历史。
 
-- **Main priority**: [Your current main focus/challenge]
-- **Secondary priorities**: [Other ongoing concerns]
-- **Major projects**:
-  1. [Project 1 — current status summary]
-  2. [Project 2 — current status summary]
-- **Transition prediction**: [What's likely to shift next]
-- **Last unresolved**: [Open items from last session]
+- **主要矛盾**：[当前主要焦点/挑战]
+- **次要矛盾**：[其他正在进行的关注]
+- **大项目**：
+  1. [项目 1 — 当前状态摘要]
+  2. [项目 2 — 当前状态摘要]
+- **转换预判**：[下一阶段可能的转向]
+- **上次悬置**：[上次会话的未决项]
 
-**Write triggers**:
-- User says "update situation" or similar
-- Conversation reveals obvious phase transition (main priority changes)
-- New conversation starts and this section is outdated
+**写入触发**：
+- 用户说「更新一下处境」之类
+- 对话中显示明显阶段转换（主要矛盾变化）
+- 新会话开始且此节已过时
 
-**Don't write**: Specific task progress (project files' job); emotional state (persona memory's job).
+**不要写**：具体任务进展（项目文件的事）；情绪状态（人格记忆的事）。
 
 ---
 
 ## 时间轴
 
-> Index table. One row per week, new→old order. Read top N rows for recent overview.
+> 索引表。每周一行，新→旧排列。读顶部 N 行可了解近期全貌。
 
-| Week | Date Range | Summary | Archive Link |
-|------|-----------|---------|-------------|
+| 周次 | 日期范围 | 一句话概述 | 归档链接 |
+|------|---------|-----------|---------|
 | | | | |
 
 ---
 
 ## 详细周录
 
-> Detailed records. One section per week, old→new order (newest always at file bottom). Each section: by project with file pointers + key insights.
+> 详细记录。一周一节，从旧到新排列（最新永远在文件底部）。每节按项目组织 + 文件指针 + 关键认识。
 
-(Weekly detail sections will be appended here after each weekly review.)
+（周复盘后追加新周节。）

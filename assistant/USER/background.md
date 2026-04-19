@@ -1,1 +1,1 @@
-[This is a placeholder sub-file. Fill in your personal background and experience.]
+[占位子文件。在此填写你的个人背景与经历。]

@@ -65,7 +65,7 @@
         ]
       },
       {
-        "matcher": "good night|bye|see you|that's all for today",
+        "matcher": "晚安|今天就到这里|bye|good night",
         "hooks": [
           {
             "type": "command",
