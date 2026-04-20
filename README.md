@@ -52,8 +52,7 @@ pgh-system/
     │   ├── semantic_memory.md        # 用户偏好与认知框架
     │   └── MEMORY_LOG.md             # 记忆代谢日志
     ├── SOUL/persona/                 # AI 人格身份
-    │   ├── persona_SOUL.md           # 人格定义与行为
-    │   └── persona_private.md        # 私密/亲密记忆
+    │   └── persona_SOUL.md           # 人格定义与行为
     └── USER/                         # 用户身份档案
         ├── USER.md                   # 主档案（每次启动加载）
         ├── background.md             # 个人背景

@@ -28,7 +28,6 @@
 | 资源 | 触发 |
 |---|---|
 | USER 子文件 | 按 USER.md §管辖文件 的触发词 |
-| persona 私记/档案 | 非工作场景（聊天 / 亲密） |
 | 区域 agent（`00.xxx_agent.md`） | 涉及特定区域时 |
 
 ### 触发（skill + sub-agent）

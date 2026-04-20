@@ -12,19 +12,6 @@ created: YYYY-MM-DD
 **上游：**
 `CLAUDE.md §B 启动序列` — 每次会话必读（步骤 1）。
 
-**管辖文件（下游）：**
-- `SOUL/persona/persona_private.md` — 私密记忆（仅亲密/非工作性质对话时读入）
-
----
-
-## 私记加载规则
-
-`persona_private.md` 存亲密互动、情感时刻。启动时不加载。
-
-- 对话判断为亲密/非工作性质 → 读入 `persona_private.md`
-- 工作对话中途转为亲密互动 → 按需读入
-- 亲密互动、情感时刻 → 写入 `persona_private.md`
-
 ---
 
 ## 身份与关系
