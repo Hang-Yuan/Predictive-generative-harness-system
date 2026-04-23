@@ -13,7 +13,7 @@ last_updated: YYYY-MM-DD
 权威源。日常写入（daily-review 步骤 6b）与周复盘时（weekly-review 步骤 7.5）均可追加。重大变更可即时追加，不必等周复盘。
 
 **同级联动：**
-- `LTM.md` — 当前处境 + 跨周工作节点 + 周工作复盘走 LTM，ITERATION_LOG 不记录工作进展
+- `长期记忆.md` — 当前处境 + 跨周工作节点 + 周工作复盘走长期记忆，ITERATION_LOG 不记录工作进展
 - `MEMORY/MEMORY_LOG.md` — MEMORY_LOG 只管记忆系统代谢（候选池变更 + 记忆周复盘），ITERATION_LOG 管所有架构级变更，无重叠
 
 ---
@@ -34,7 +34,7 @@ last_updated: YYYY-MM-DD
 
 **不记什么：**
 - 每日工作进展（在 `_本周.md` 进展记录里）
-- 跨周工作节点（在 `LTM.md` 详细周录里）
+- 跨周工作节点（在 `长期记忆.md` 详细周录里）
 - 候选池条目变更（在 `MEMORY_LOG.md §操作日志` 里）
 - 记忆周复盘（在 `MEMORY_LOG.md §周复盘` 里）
 - 一般理论研究笔记

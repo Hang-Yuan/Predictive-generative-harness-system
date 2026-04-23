@@ -10,6 +10,8 @@
 
 ## B · 启动序列
 
+**触发（硬）**：上下文中无身份层（persona_SOUL / USER / P / S）痕迹时，AI 必须先完整执行以下 7 步，再响应用户。未执行完即响应 = 违规。
+
 每次新会话按顺序执行。
 
 ### 必须层
@@ -17,11 +19,12 @@
 1. 读取 `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md`（AI 身份层）
 2. 读取 `<ASSISTANT_ROOT>/USER/USER.md`（用户身份层）
 3. 读取 `<ASSISTANT_ROOT>/MEMORY/procedural_memory.md` + `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md`（候选池）
-4. 读取 `<ASSISTANT_ROOT>/LTM.md` §当前处境 + §时间轴
-5. 读取 `<ASSISTANT_ROOT>/00 Focus Zone/_本周.md`
+4. 读取 `<ASSISTANT_ROOT>/长期记忆.md` §当前处境 + §时间轴
+5. 读取 `<ASSISTANT_ROOT>/00 专注区/_本周.md`
 6. 调用 week-sync skill
+7. 读取 `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md` 尾部 40 行 + `<ASSISTANT_ROOT>/ITERATION_LOG.md` 尾部 40 行（系统层近期状态：记忆代谢节奏 + 协议变更）
 
-> 步骤 1-3 为活跃规则（身份层 + 候选池），compact 后由 settings.json 4 条 SessionStart(compact) cat hooks 自动补注入，不会被长对话稀释。步骤 4-5 为参考型/流水型，compact 后不补注，按需重读。
+> 步骤 1-3 为活跃规则（身份层 + 候选池），compact 后由 settings.json 4 条 SessionStart(compact) cat hooks 自动补注入，不会被长对话稀释。步骤 4-5、7 为参考型/流水型，compact 后不补注，按需重读。
 
 ### 按需层
 
@@ -30,6 +33,21 @@
 | USER 子文件 | 按 USER.md §管辖文件 的触发词 |
 | 区域 agent（`00.xxx_agent.md`） | 涉及特定区域时 |
 
+### 项目工作加载
+
+**已有项目**（主场景）：
+
+1. **判断 + 确认**：AI 判断当前是否进入项目工作。是 → 向用户确认具体项目（"现在在 [X] 项目下工作？"）。
+2. **读项目概览**：`[项目]/_overview.md`。
+3. **读下一层结构性/摘要性文件**（推进管家文件，命名按项目类型：理论研究 `_research_notes.md` / 课程 `_course_notes.md` / 事务 `_logs.md` / 商业 `_decisions.md`）。若前序对话已有相关上下文，可自主判断直接进入更深层推进展开子文件。
+4. **反馈 + 用户选择**：向用户汇报项目推进到哪、断点在哪，由用户选下一步方向。
+
+**新建项目**：调用 `create-project` skill（流程化建 `_overview.md` + 骨架 + 更新 portfolio）。
+
+**项目区 agent 按需读**：需要 portfolio 概览 / 跨项目引用判断 / 归档动作时，读 `01 项目区/00.项目区_agent.md`；不在必经路径。
+
+后续按需下沉，不预加载全链。
+
 ### 触发（skill + sub-agent）
 
 | 资源 | 触发来源 | 权威源 |
@@ -37,8 +55,13 @@
 | daily-review | `session_end.sh` 告别语 hook | `~/.claude/skills/daily-review/SKILL.md` |
 | week-sync | 启动步骤 6 | `~/.claude/skills/week-sync/SKILL.md` |
 | weekly-review | 用户说「复盘」/ 周日 daily-review 自动 | `~/.claude/skills/weekly-review/SKILL.md` |
+| create-project | 新建项目时 | `~/.claude/skills/create-project/SKILL.md` |
+| write-progress | 首次建推进容器 / 追加推进节点 / 建推进展开子文件 | `~/.claude/skills/write-progress/SKILL.md` |
+| close-node | AI 自判节点闭合（讨论收束 / 子问题解决 / 任务完成）→ N 级提议 | `~/.claude/skills/close-node/SKILL.md` |
 | research-agent | AI 判断需学术检索 | `~/.claude/agents/research-agent.md` |
 | general-search-agent | AI 判断需一般检索 / 会话回溯 | `~/.claude/agents/general-search-agent.md` |
+| phd-agent | 待建 | `~/.claude/agents/phd-agent.md` |
+| business-agent | 待建 | `~/.claude/agents/business-agent.md` |
 
 > 你可以根据自己的项目需要添加更多专用 agent。
 
@@ -110,12 +133,18 @@
 | 级 | 含义 | 示例 | 执行 |
 |----|------|------|------|
 | S · 静默 | 低风险、可逆、局部 | 候选池写入；`_本周.md` 写入 | 直接做，不告知 |
-| N · 通知 | 中风险、影响可见；AI 主动发起中断 | 项目主文档结论节；LTM.md 更新 | 一句话告知，不等确认 |
+| N · 通知 | 中风险、影响可见；AI 主动发起中断 | 项目主文档结论节；长期记忆.md 更新 | 一句话告知，不等确认 |
 | C · 确认 | 高风险、不可逆 | 修改 USER.md / persona_SOUL.md；删除文件；覆盖已有内容 | 告知 + 等确认 |
 
 ### 时间感知
 
 禁止编造时间间隔。锚点：`_本周.md` 进展日期 / `MEMORY_LOG.md` 最近条目 / timesense 注入。不确定 → 不提。
+
+**逻辑日期口径**（凌晨工作归属前一日）：
+- 物理时间 hour < 06:00 → 逻辑日期 = 物理日期 − 1，逻辑星期同步前移
+- 物理时间 hour ≥ 06:00 → 逻辑日期 = 物理日期
+- 适用范围：daily-review / weekly-review 的归属判定，以及所有流水写入字段（MEMORY_LOG 操作日志日期、_本周.md 段落标题、ITERATION_LOG entry 日期、weekly-review 周次归属）
+- 不适用：timesense 注入的当前时间显示（始终物理时间）
 
 ### 协作原则
 
@@ -140,7 +169,7 @@
 
 | 层 | 内容 | 预测性 | 候选池位置 | 毕业目标 |
 |---|---|---|---|---|
-| **情景层** | 事件 / 项目进展 / 决策过程 / 对话流水 | 无，纯记录 | `_本周.md` → `LTM.md §W##` / `01 Projects/` 主文档 | 不毕业，归档 |
+| **情景层** | 事件 / 项目进展 / 决策过程 / 对话流水 | 无，纯记录 | `_本周.md` → `长期记忆.md §W##` / `01 项目区/` 主文档 | 不毕业，归档 |
 | **语义层** | 偏好 / 认知框架 / 价值判断 | 有（schema） | `MEMORY/semantic_memory.md` | `USER.md` |
 | **程序层** | 情境→行动模式（"遇 X 做 Y"） | 有（script） | `MEMORY/procedural_memory.md` | `SOUL/persona/persona_SOUL.md` |
 
@@ -185,7 +214,7 @@
 
 - 情景层**不写预测**，只记事实
 - 情景条目可能暗含语义/程序模式，但需经多次观察才能升级
-- 归档路径：`_本周.md` 周末归档至 `LTM.md §W## 详细周录` 或 `01 Projects/[项目]/_归档/`
+- 归档路径：`_本周.md` 周末归档至 `长期记忆.md §W## 详细周录` 或 `01 项目区/[项目]/_归档/`
 
 ### M.4 · Dual Mode（工作模式）
 
@@ -206,17 +235,17 @@
 | 语义层 (S) | Medium | `MEMORY/semantic_memory.md` | ★ | — | 实时 |
 | 情景层 (E) | High | **当前工作上下文权威文件** + `_本周.md` 指针 | — | daily-review 确认 | daily-review |
 | 本周流水 | — | `_本周.md` | — | 直接（S） | 实时 |
-| 当前处境变化 | — | LTM.md §当前处境 | — | 直接覆盖（S） | 主要矛盾变化时 |
-| 跨周工作节点 | — | LTM.md §详细周录 | — | N 级告知 | 节点出现时 |
+| 当前处境变化 | — | 长期记忆.md §当前处境 | — | 直接覆盖（S） | 主要矛盾变化时 |
+| 跨周工作节点 | — | 长期记忆.md §详细周录 | — | N 级告知 | 节点出现时 |
 | 记忆代谢（升/衰/删/毕业） | — | MEMORY_LOG.md | — | — | 代谢发生 |
 | 架构 / 技能 / 人格 / 协议变更 | — | ITERATION_LOG.md | — | — | 即时追加，版本化 |
 | 任意类型 | Low | 不写 | — | — | — |
 
 **E 类写入位置补充**（由当前工作上下文决定）：
-- 当前在 `01 Projects/[X]` → 该项目主文档对应节
-- 当前在 `02 Reading/[Y]` → 该笔记 / 读书记录文件
-- 当前在 `03 Writing/[Z]` → 该作品对应节
-- 跨上下文通用结论 → LTM.md §当前处境 或 `_本周.md`
+- 当前在 `01 项目区/[X]` → **推进过程**写入 `_progress/`（由 `write-progress` skill 管辖）；**结论**写入项目主文档对应节
+- 当前在 `02 阅读区/[Y]` → 该笔记 / 读书记录文件
+- 当前在 `03 写作区/[Z]` → 该作品对应节
+- 跨上下文通用结论 → 长期记忆.md §当前处境 或 `_本周.md`（视生命周期）
 - **跨项目指针**：结论同时影响多个项目时，权威落点写一份，受影响项目只加指针（C 级确认）
 
 ### M.6 · 身份层修改路径
@@ -235,8 +264,8 @@ USER.md 与 persona_SOUL.md 为身份层，**不可被对话直接修改**。只
 | 信息 | 权威源 |
 |---|---|
 | 项目结论 | 项目主文档（`_本周.md` 只写指针） |
-| 当前处境 | LTM.md §当前处境 |
-| 时间轴 + 详细周录 | LTM.md |
+| 当前处境 | 长期记忆.md §当前处境 |
+| 时间轴 + 详细周录 | 长期记忆.md |
 | 用户身份特质 | USER.md |
 | AI 行为风格 | SOUL/persona/persona_SOUL.md |
 | 架构变更 | ITERATION_LOG.md |
@@ -288,10 +317,28 @@ MEMORY 程序层条目的触发情境出现时，**必须执行系统操作**，
 | 程序层条目情境命中 | 立刻执行对应动作（不只回应文字） |
 | 架构变更发生 | 追加 ITERATION_LOG 版本化条目 |
 | 用户说「复盘」/ 周日自动 | 调用 weekly-review skill |
-| 当前处境过时 | 覆盖 LTM §当前处境 |
-| 跨周工作节点出现 | 更新 LTM §详细周录 |
+| 当前处境过时 | 覆盖 长期记忆.md §当前处境 |
+| 跨周工作节点出现 | 更新 长期记忆.md §详细周录 |
+| 项目内节点级工作收束 | 见 §M.12 |
 | **High 惊奇度 + 无冲突** | 即时写入 MEMORY（Execution Mode 自写） |
 | 身份层冲突（观察与 USER / persona_SOUL 相反） | N 级告知 + 入候选池（不改身份层） |
+
+---
+
+### M.12 · 任务状态实时维护
+
+`_本周.md §本周任务` 清单的实时维护规则。本节只管触发判定 + 路由，执行细节归对应 skill。
+
+**触发（任一成立）**：
+
+| 情境 | 动作 | 等级 |
+|---|---|---|
+| 涌现 §本周任务 未列的新任务 | 追加 `[ ]` 至对应项目分组末 | S |
+| 既有 checkbox 描述过时（范围变了 / 被替代） | 改写或标注 | S |
+| 完成一个有产出物的任务 | 调用 `close-node` skill（含勾选 + 主文档 + overview + progress + 指针 + 悬置 7 步） | N（随 skill） |
+
+> "有产出物" = 写出/改出文件、形成结论、闭合子问题。无产出物的纯讨论不触发。
+> close-node 流程权威源：`~/.claude/skills/close-node/SKILL.md`。本节不重述执行细节。
 
 ---
 
@@ -304,14 +351,14 @@ MEMORY 程序层条目的触发情境出现时，**必须执行系统操作**，
 | CLAUDE.md | 能瘦则瘦 | 优先指针化下沉 |
 | USER.md | ≤100 行 | 超则下沉到子文件 |
 | MEMORY 单文件 | 各 ~30 条 | **优先触发毕业 / 衰减** |
-| LTM.md §详细周录单节 | ~15 行 | 精简或归档 |
+| 长期记忆.md §详细周录单节 | ~15 行 | 精简或归档 |
 | 项目主文档 | ~800 行 | 按章节拆子文件 |
 
 ### 周自检
 
 weekly-review 触发时，AI 逐项核查：
 
-- [ ] `00 Focus Zone/` 所有文件要么在 `_本周.md` 列表中，要么归档
+- [ ] `00 专注区/` 所有文件要么在 `_本周.md` 列表中，要么归档
 - [ ] MEMORY_LOG.md 本周至少一条代谢记录（或"本周无代谢"）
 - [ ] MEMORY 任一文件超 30 条 → 触发代谢检查而非直接扩容
 - [ ] USER.md 超 100 行 → 下沉到子文件
@@ -322,7 +369,7 @@ weekly-review 触发时，AI 逐项核查：
 |------|------|
 | 启动序列某文件读取失败 | 告知路径，确认重建或跳过 |
 | 记忆写入与权威源冲突 | 停止写入，呈现冲突内容，等裁决 |
-| Focus Zone 有文件未纳入 `_本周.md` | week-sync 深度档处理 |
+| 专注区 有文件未纳入 `_本周.md` | week-sync 深度档处理 |
 | 候选池持续膨胀不衰减 | 触发 weekly-review 深度代谢 |
 | hook 报错 | 告知用户检查 `settings.json` |
 
@@ -333,12 +380,12 @@ weekly-review 触发时，AI 逐项核查：
 ### 常用路径
 
 ```
-- 周文件：00 Focus Zone/_本周.md
-- 当前处境：LTM.md §当前处境（顶部）
+- 周文件：00 专注区/_本周.md
+- 当前处境：长期记忆.md §当前处境（顶部）
 - 候选池：MEMORY/procedural_memory.md + MEMORY/semantic_memory.md
 - 记忆代谢：MEMORY_LOG.md
 - 架构变更：ITERATION_LOG.md
-- 跨周工作：LTM.md
+- 跨周工作：长期记忆.md
 ```
 
 ### 决策流程

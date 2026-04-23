@@ -2,6 +2,8 @@
 
 一个为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 设计的持久化记忆与工作流系统。赋予 Claude 跨会话的长期记忆、结构化项目管理和自我改进的行为模式。
 
+> 📜 **最近更新见 [CHANGELOG.md](./CHANGELOG.md)** — 每次版本迭代的新增 / 变更 / 参数调整 / 本地同步建议。基于既有版本定制过的使用者请先扫这份。
+
 ## 这是什么
 
 Claude Code 默认是无状态的——每个新会话从零开始。这套 harness 通过构建结构化的外部记忆系统解决这个问题：Claude 在启动时读取、在会话中和结束时写入。
@@ -34,18 +36,18 @@ pgh-system/
 │       └── general-search-agent.md   # 通用网页 + 对话回溯 agent
 │
 └── assistant/                        # 你的知识库与工作记忆
-    ├── LTM.md                        # 长时程记忆（处境 + 时间轴 + 周录）
+    ├── 长期记忆.md                        # 长时程记忆（处境 + 时间轴 + 周录）
     ├── ITERATION_LOG.md              # 架构变更日志（版本化）
-    ├── 00 Focus Zone/                # 周工作台
+    ├── 00 专注区/                # 周工作台
     │   ├── _本周.md                   # 当前周文件（任务 + 进展）
-    │   ├── 00.focus_agent.md         # 区域规则
+    │   ├── 00.专注区_agent.md         # 区域规则
     │   └── _归档/                     # 已归档的周文件
-    ├── 01 Projects/                  # 项目文件夹
-    │   └── 00.projects_agent.md      # 区域规则
-    ├── 02 Reading/                   # 阅读笔记
-    │   └── 00.reading_agent.md       # 区域规则
-    ├── 03 Writing/                   # 写作产出
-    │   └── 00.writing_agent.md       # 区域规则
+    ├── 01 项目区/                  # 项目文件夹
+    │   └── 00.项目区_agent.md      # 区域规则
+    ├── 02 阅读区/                   # 阅读笔记
+    │   └── 00.阅读区_agent.md       # 区域规则
+    ├── 03 写作区/                   # 写作产出
+    │   └── 00.写作区_agent.md       # 区域规则
     ├── MEMORY/                       # 记忆候选池
     │   ├── 00.memory_agent.md        # 记忆区规则与模板
     │   ├── procedural_memory.md      # AI 行为模式（情境→行动）
@@ -72,7 +74,7 @@ CLAUDE.md（Claude Code 自动加载）
   → 步骤 1：persona_SOUL.md（AI 身份层）
   → 步骤 2：USER.md（用户身份层）
   → 步骤 3：procedural_memory.md + semantic_memory.md（行为模式候选池）
-  → 步骤 4：LTM.md §当前处境 + §时间轴（上下文）
+  → 步骤 4：长期记忆.md §当前处境 + §时间轴（上下文）
   → 步骤 5：_本周.md（本周工作）
   → 步骤 6：week-sync skill（状态同步）
 ```
@@ -85,7 +87,7 @@ CLAUDE.md（Claude Code 自动加载）
 
 | 层 | 存什么 | 位置 | 毕业目标 |
 |---|--------|------|----------|
-| **情景层** | 事件、进展、决策 | `_本周.md` → `LTM.md` | 归档，不毕业 |
+| **情景层** | 事件、进展、决策 | `_本周.md` → `长期记忆.md` | 归档，不毕业 |
 | **语义层** | 用户偏好、认知框架 | `semantic_memory.md` | `USER.md` |
 | **程序层** | AI 行为规则（遇 X 做 Y） | `procedural_memory.md` | `persona_SOUL.md` |
 
@@ -151,7 +153,7 @@ CLAUDE.md（Claude Code 自动加载）
 5. **自定义身份文件**：
    - 编辑 `USER/USER.md` — 填入你的身份、认知模式、协作偏好
    - 编辑 `SOUL/persona/persona_SOUL.md` — 定义 AI 人格的名字、语气和风格
-   - 编辑 `LTM.md §当前处境` — 描述你当前的处境和优先级
+   - 编辑 `长期记忆.md §当前处境` — 描述你当前的处境和优先级
 
 6. **自定义告别语触发词**：`settings.json` 中 `session_end.sh` 的 matcher 默认是 `"good night|bye|see you|that's all for today"`，改成你常用的告别语。
 
@@ -168,7 +170,7 @@ CLAUDE.md（Claude Code 自动加载）
 随着使用，系统自行填充：
 - 工作进展填入 `_本周.md`
 - 记忆条目在候选池中积累
-- `LTM.md` 构建你的跨周时间轴
+- `长期记忆.md` 构建你的跨周时间轴
 - 周复盘执行代谢，稳定的模式毕业进入身份层
 
 ### 添加自定义 Agent
