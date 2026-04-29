@@ -14,6 +14,56 @@
 
 ---
 
+## v0.4.0 · 2026-04-29 · v3.2 协议压缩 + 候选池证据外迁（破坏性）
+
+### 背景
+
+本版把主控规则从“完整说明书”改为“什么时候调用什么”的路由层：CLAUDE.md 只保留全局判断、写入路由和启动链，流程细节下沉到 hooks / skills / MEMORY 区域 agent。目标是降低常驻注入成本，同时保留可执行边界。
+
+### 新增组件
+
+- `.claude/skills/new-file/SKILL.md` — 新建 Markdown 文件时强制补加载链（上游 / 管辖文件 / 同级联动）
+- `.claude/skills/manage-research-reference/SKILL.md` — 科研类项目 `_reference/文献记录.md` 管理；正文行内只保留 `(Author, Year)` 简标
+- `assistant/MEMORY/_archive/procedural_archive.md`
+- `assistant/MEMORY/_archive/semantic_archive.md`
+
+### 架构变更
+
+- `CLAUDE.md` 同步 v3.2：主控层瘦身，旧 §M.4–M.12 合并到 §M.1 / §M.2 / §M.3、§I 单一权威源、§R 行为路由表和各 skill 内部规则
+- `memory_signal.sh` 改为按 §M 做 schema 比对：命中候选池后无论符合还是修正，方向都是升星；偏离不是 schema 失败，而是边界需要精修
+- 候选池主池字段外迁：`procedural_memory.md` / `semantic_memory.md` 主池只保留运行字段，发现日期 / 证据 / related / 演化记录进入 `_archive/`
+- `close-node` 增加 progress → S 候选提取；`weekly-review` 增加周级暂存复审输入
+- `MEMORY_LOG.md` 增加 `§周复盘暂存`，承接未达即时入池标准但值得周级复审的 schema 信号
+
+### 参数调整
+
+- Bloat 阈值明文化为：MEMORY 单文件 ≤30 条，P/S 合计 ≤60 条
+- `thinking_protocol.sh` 改为四步：分析 → 检索 → 推导 → 执行
+
+### 路径与命名
+
+- `MEMORY_LOG.md` 与 `ITERATION_LOG.md` 均位于 `assistant/` / `assistant/MEMORY/` 的真实位置，不再使用旧 `00 专注区` 路径
+- B 端继续使用占位路径 `<ASSISTANT_ROOT>/`、人格占位 `persona`、中文化区域名 `00 专注区` / `01 项目区` / `02 阅读区` / `03 写作区`
+
+### 同步建议
+
+**破坏性变更。** 对基于 v0.3.x 定制过的使用者：
+
+1. 先备份本地 `assistant/MEMORY/`。
+2. 整套替换 `.claude/hooks/thinking_protocol.sh`、`.claude/hooks/memory_signal.sh` 与 `.claude/CLAUDE.md`；不要对旧 CLAUDE.md 做增量补丁。
+3. 按本版模板重组候选池字段：主池只保留 schema 本体，证据与演化记录迁入 `_archive/`。
+4. 同步 `close-node` / `weekly-review` / `write-progress` / `create-project` / `daily-review` 五个既有 skill，并新增 `new-file` 与 `manage-research-reference`。
+5. 若本地已有真实 P/S 条目，不要直接覆盖；先把原证据迁入 `_archive/` 后再替换主池格式。
+
+### 不受影响
+
+- USER.md / persona_SOUL.md 的节结构
+- 长期记忆.md 与项目区既有内容
+- `.claude/agents/`
+- `.claude/settings.json`
+
+---
+
 ## v0.3.2 · 2026-04-25 · 毕业条目拆分：身份层净化 + MEMORY_LOG 完整归档
 
 ### 背景

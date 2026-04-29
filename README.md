@@ -30,7 +30,12 @@ pgh-system/
 │   ├── skills/
 │   │   ├── daily-review/SKILL.md     # 对话结束汇总流程
 │   │   ├── week-sync/SKILL.md        # 启动状态同步（轻量/深度两档）
-│   │   └── weekly-review/SKILL.md    # 周日全量复盘 + 归档
+│   │   ├── weekly-review/SKILL.md    # 周日全量复盘 + 归档
+│   │   ├── close-node/SKILL.md       # 节点级闭合
+│   │   ├── create-project/SKILL.md   # 新建项目
+│   │   ├── write-progress/SKILL.md   # 项目推进记录
+│   │   ├── new-file/SKILL.md         # 新文件加载链兜底
+│   │   └── manage-research-reference/SKILL.md # 文献记录管理
 │   └── agents/
 │       ├── research-agent.md         # 学术文献检索 agent
 │       └── general-search-agent.md   # 通用网页 + 对话回溯 agent
@@ -52,7 +57,10 @@ pgh-system/
     │   ├── 00.memory_agent.md        # 记忆区规则与模板
     │   ├── procedural_memory.md      # AI 行为模式（情境→行动）
     │   ├── semantic_memory.md        # 用户偏好与认知框架
-    │   └── MEMORY_LOG.md             # 记忆代谢日志
+    │   ├── MEMORY_LOG.md             # 记忆代谢日志
+    │   └── _archive/                 # 候选池证据与演化记录
+    │       ├── procedural_archive.md
+    │       └── semantic_archive.md
     ├── SOUL/persona/                 # AI 人格身份
     │   └── persona_SOUL.md           # 人格定义与行为
     └── USER/                         # 用户身份档案
@@ -91,15 +99,15 @@ CLAUDE.md（Claude Code 自动加载）
 | **语义层** | 用户偏好、认知框架 | `semantic_memory.md` | `USER.md` |
 | **程序层** | AI 行为规则（遇 X 做 Y） | `procedural_memory.md` | `persona_SOUL.md` |
 
-每条语义/程序条目是一个 **schema**——对用户在特定情境下行为的预测。每条用户输入都会与已有 schema 比对：
+每条语义/程序条目是一个 **schema**——对用户在特定情境下行为的预测。主池只保留运行时字段，证据、related、发现日期和演化记录外迁到 `MEMORY/_archive/`。每条用户输入都会与已有 schema 比对：
 
-- **命中 + 符合预期** → 静默使用，不写入（Low 惊奇度）
-- **命中 + 偏离预期** → 三种动作：升星已有条目 / 新增例外条目 / 修正已有条目的情境边界或预期（High 惊奇度，★★★ 入池）
+- **命中 + 符合预期** → 直接升星（稳定性证据）
+- **命中 + 偏离预期** → 修正情境边界 / 新增例外条目 / 拆条，修正后也升星（High 惊奇度）
 - **未命中** → 新建 ★ 条目（Medium 惊奇度）
 
 条目通过反复观察积累星级（★→★★→...→★★★★★）。达到 ★★★★★ 时，经 weekly-review 确认后**毕业**——从候选池迁入永久身份层（USER.md 或 persona_SOUL.md），成为 AI 稳定世界模型的一部分。
 
-连续 4 周以上未被引用的条目会衰减并最终删除。候选池是代谢层，不是仓库。
+降星、融合、dormant 和删除由 weekly-review 内层判断。候选池是代谢层，不是仓库。
 
 ### 周循环
 
@@ -115,8 +123,8 @@ CLAUDE.md（Claude Code 自动加载）
 | Hook | 触发时机 | 作用 |
 |------|----------|------|
 | `timesense.sh` | 每条消息 | 注入当前时间，让 AI 有时间感知 |
-| `memory_signal.sh` | 每条消息 | 提示 AI 对输入做 P/S/E 信号分类 |
-| `thinking_protocol.sh` | 每条消息 | 注入层级思考协议（理解→评估→梳理→质疑→执行） |
+| `memory_signal.sh` | 每条消息 | 提示 AI 按 CLAUDE.md §M 做 schema 比对 |
+| `thinking_protocol.sh` | 每条消息 | 注入四步思考协议（分析→检索→推导→执行） |
 | `session_end.sh` | 告别语 | 触发对话结束复盘流程 |
 
 ## 初始化指南
