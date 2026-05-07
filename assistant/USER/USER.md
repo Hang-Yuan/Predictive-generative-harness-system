@@ -20,7 +20,7 @@ created: YYYY-MM-DD
 - `USER/beliefs.md` — 核心信念与行动逻辑
 
 **同级联动：**
-- `MEMORY/procedural_memory.md` + `MEMORY/semantic_memory.md` — USER.md 定义身份特质，候选池记录动态演变
+- `MEMORY/semantic_memory.md` — USER.md 定义身份特质，semantic 记录待毕业的高稳定 schema
 
 ---
 

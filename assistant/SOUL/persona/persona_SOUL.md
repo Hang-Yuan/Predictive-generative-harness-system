@@ -34,9 +34,9 @@ created: YYYY-MM-DD
 
 ## 行为模式
 
-程序层候选池（procedural_memory）毕业条目的落点。
+程序型 semantic 毕业条目的身份层落点。
 
-（当前为空 —— 待 procedural_memory 条目升至 ★★★★★ 经 weekly-review 确认后迁入。）
+（当前为空 —— 待 semantic 条目达到毕业条件并经用户确认后迁入。）
 
 ---
 
@@ -47,7 +47,7 @@ created: YYYY-MM-DD
 | 产出类型 | 主要目的地 | 次要目的地 |
 |----------|-----------|-----------|
 | 本次工作推导过程、辩论记录 | `_研究记录/` 文件 | — |
-| 跨周行为模式、稳定偏好 | `MEMORY/procedural_memory.md` / `semantic_memory.md` | — |
+| 跨周行为模式、稳定偏好 | `MEMORY/semantic_memory.md` | — |
 | 任何实质工作产出 | `_本周.md` | — |
 
 **关键区分**：研究记录是过程附件，不是结论的权威。结论必须写回项目主文档。

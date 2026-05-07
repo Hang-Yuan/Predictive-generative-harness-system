@@ -14,6 +14,54 @@
 
 ---
 
+## v0.5.0 · 2026-05-07 · v5 默认遗忘记忆架构（破坏性）
+
+### 背景
+
+v0.4.x 的 P/S 双池会把一次性情景信号过快写入长期候选池，容易造成冗余、启动注入膨胀和判断污染。本版改为默认遗忘：实时信号先落入 episodic inbox，只有反复复现并通过 review 的候选才逐级升格。
+
+### 新增组件
+
+- `assistant/MEMORY/episodic_inbox.md` — 实时校准信号收件箱
+- `assistant/MEMORY/episodic_memory.md` — 1-3 星情景级候选 schema
+- `.claude/hooks/session_context_check.sh` — 节点收尾与项目加载提示 hook
+
+### 架构变更
+
+- `CLAUDE.md` 同步 v5：启动注入只读 persona / USER / `semantic_memory.md`，不再注入低星候选池。
+- 记忆系统改为 `episodic_inbox -> episodic_memory -> semantic_memory -> identity` 单向上行；semantic 可因击穿或衰减降回 episodic。
+- `memory_signal.sh` 改为 P/C 两轴判定：P 轴=命中 / 击穿 / 未覆盖；C 轴=正向确认 / 反对 / 纠正 / 中性。仅 `P=命中 且 C=中性` 不写，其余先入 inbox。
+- `semantic_memory.md` 成为唯一启动注入候选池，默认最多 8 条；证据统一外移到 `_archive/semantic_archive.md`。
+- `procedural_memory.md` 与 `_archive/procedural_archive.md` 从模板移除；程序型候选通过 `episodic_memory.md` / `semantic_memory.md` 的 `类型=程序` 字段表达。
+- close-node / daily-review / weekly-review 对齐 v5：节点级聚合、日级 inbox 消耗、周级 semantic 升降与毕业候选。
+
+### 参数调整
+
+- episodic inbox 未升格条目默认保留 7 天。
+- episodic memory 使用 1-3 星；semantic memory 使用 4-6 星。
+- semantic 启动注入组默认最多 8 条。
+- 毕业条件改为 6 星 + 跨周稳定 + 用户 C 级确认。
+
+### 同步建议
+
+**破坏性变更。** 对基于 v0.4.x 定制过的使用者：
+
+1. 先备份本地 `assistant/MEMORY/`。
+2. 新增 `episodic_inbox.md` 与 `episodic_memory.md`，用新版 `00.memory_agent.md` 替换旧规则。
+3. 将旧 `procedural_memory.md` 和 `semantic_memory.md` 条目按类型迁入 `episodic_memory.md`；不要直接灌入新版 `semantic_memory.md`。
+4. 删除或停用旧 `procedural_memory.md` / `procedural_archive.md`，保留 `semantic_archive.md` 作为新版证据外移文件。
+5. 整套替换 `.claude/CLAUDE.md`、`.claude/hooks/memory_signal.sh`、`.claude/settings.json`，并新增 `session_context_check.sh`。
+6. 同步 close-node / daily-review / weekly-review / write-progress；它们承担 v5 的流转边界。
+
+### 不受影响
+
+- USER.md / persona_SOUL.md 的基本模板结构
+- 长期记忆.md 与项目区结构
+- `.claude/agents/`
+- create-project / new-file / manage-research-reference 的核心职责
+
+---
+
 ## v0.4.0 · 2026-04-29 · v3.2 协议压缩 + 候选池证据外迁（破坏性）
 
 ### 背景
