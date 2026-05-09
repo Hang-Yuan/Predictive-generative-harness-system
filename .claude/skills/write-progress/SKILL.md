@@ -1,4 +1,6 @@
 ---
+title: write-progress/SKILL.md
+type: skill
 name: write-progress
 description: 项目推进过程的写入规范。从零建推进容器 + 管家文件首节点 + 后续追加节点 + 新建/追加推进展开子文件。通用 workflow，不限项目领域（理论研究 / 商业 / 课程 / 事务皆适用）。
 updated: 2026-05-07
@@ -293,7 +295,7 @@ updated: YYYY-MM-DD
 |---|---|
 | 大型阶段性结论 | 项目主文档（`[项目名] vX.Y-draft.md` 或等价物）版本化固化 |
 | 小阶段性结论 | 推论链节点的"结论"字段 + 推进展开子文件末尾 |
-| 文献引用 | 见 `manage-research-reference` skill（科研类项目） |
+| 文献引用 | 见 `manage-research-reference` skill（科研类项目；待建） |
 | 跨项目结论 | 权威落点写一份，其他项目加指针（见 projects_agent 跨引用规则） |
 
 ---
@@ -335,7 +337,8 @@ updated: YYYY-MM-DD
 - **段间转换不可省略**——L2 用 `**开出**` / `新问题`，L3 用 `问题承接` + `→ 开出的新问题` / `→ 本节收束`
 - **指针粒度灵活**——文件 / 文件§节都可
 - **分支保留并行**——不强行合并未交汇的分支
-- **文献规范不在本 skill**——见 `manage-research-reference`
+- **文献规范不在本 skill**——见 `manage-research-reference`（待建）
 - **不直接写记忆池**——`_progress` 是项目推论链权威源，不是 `episodic_inbox.md`、`episodic_memory.md` 或 `semantic_memory.md` 的写入落点。
 - **不把段间转换自动抽象为 S**——只有 close-node / weekly-review 在读取转向理由后，才能判断是否形成可迁移 schema。
 - **不替代记忆代谢**——升星、衰减、毕业、情景层归档均不在本 skill 执行。
+

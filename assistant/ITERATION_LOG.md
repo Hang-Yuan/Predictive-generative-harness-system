@@ -1,7 +1,7 @@
 ---
 title: Agent 架构变更日志
 type: agent-changelog
-version: 1.0
+version: 3.0
 last_updated: YYYY-MM-DD
 ---
 

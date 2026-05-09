@@ -1,4 +1,6 @@
 ---
+title: manage-research-reference/SKILL.md
+type: skill
 name: manage-research-reference
 description: 项目文献管理。建 _reference/ 容器 + 文献记录.md + 写入 / 追加文献条目。研究类项目首次需要文献时由 create-project 调用；后续追加文献时由 write-progress / 用户直接调用。
 ---
@@ -100,9 +102,9 @@ updated: YYYY-MM-DD
 4. 更新 frontmatter `updated` 字段
 5. 提示用户行内引用用简标
 
-### 场景 C · 与检索 agent（research-agent / general-search-agent）整合
+### 场景 C · 与检索 agent（如 general-search-agent）整合
 
-触发：通过 `research-agent` / `general-search-agent` agent 检索文献后，需要将结果纳入 `文献记录.md`。
+触发：通过检索 agent 检索文献后，需要将结果纳入 `文献记录.md`。
 
 1. 检索结果中只筛保留**支撑当前论证或开出新问题的**条目，不全量入档
 2. 按场景 B 写入流程追加
@@ -133,6 +135,6 @@ updated: YYYY-MM-DD
 
 ## 注意
 
-- **主题分组按论证用途，不按文献本身属性**：同一篇文献在一个认知科学项目里可能支撑"全局工作空间"，在另一个项目里可能支撑"事件分割"——按**它在本项目里支撑什么**分组
+- **主题分组按论证用途，不按文献本身属性**：同一篇 Zacks 2002 在 [项目 1 占位] 里可能进 "C1 — 全局工作空间"，在另一个项目里可能进别的主题——按**它在本项目里支撑什么**分组
 - **支撑位置失效要修正**：主文档章节改名 / 节合并 / 节删除时，支撑位置字段需要同步改，否则索引断链
 - **不预建空主题**：场景 A 首次建立时只写第一条文献和它所在主题；后续主题随文献追加自然展开

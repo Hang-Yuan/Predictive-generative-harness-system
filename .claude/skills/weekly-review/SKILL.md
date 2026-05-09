@@ -1,4 +1,6 @@
 ---
+title: weekly-review/SKILL.md
+type: skill
 name: weekly-review
 description: 周复盘流程。v5：周级 semantic schema 提取、episodic 衰减、语义层升降、毕业候选与周归档。触发条件：周日 daily-review 自动调用、week-sync 周日提示、或用户手动触发复盘。
 updated: 2026-05-07
@@ -11,16 +13,16 @@ updated: 2026-05-07
 **上游**：daily-review 步骤 6.5（周日自动）/ week-sync 周日检测 / 用户触发词
 
 **下游**：
-- `<ASSISTANT_ROOT>/00 专注区/_本周.md` — 写入本周产出节 + 周归档。
-- `<ASSISTANT_ROOT>/MEMORY/episodic_inbox.md` — 读取未消耗的实时校准信号。
-- `<ASSISTANT_ROOT>/MEMORY/episodic_memory.md` — 读取 1-3 星情景候选，执行提取、回写、衰减。
-- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md` — 4-6 星启动注入 schema 主文件。
-- `<ASSISTANT_ROOT>/MEMORY/_archive/semantic_archive.md` — 语义层证据、命中、演化记录。
-- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md` — 记忆代谢周复盘与毕业归档。
-- `<ASSISTANT_ROOT>/长期记忆.md` — 当前处境、时间轴、详细周录。
-- `<ASSISTANT_ROOT>/USER/USER.md` — USER 毕业写入，需 C 级确认。
-- `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md` — SOUL 毕业写入，需 C 级确认。
-- `~/.claude/skills/` — 流程化毕业写入，需 C 级确认。
+- `<ASSISTANT_ROOT>\00 专注区\_本周.md` — 写入本周产出节 + 周归档。
+- `<ASSISTANT_ROOT>\MEMORY\episodic_inbox.md` — 读取未消耗的实时校准信号。
+- `<ASSISTANT_ROOT>\MEMORY\episodic_memory.md` — 读取 1-3 星情景候选，执行提取、回写、衰减。
+- `<ASSISTANT_ROOT>\MEMORY\semantic_memory.md` — 4-6 星启动注入 schema 主文件。
+- `<ASSISTANT_ROOT>\MEMORY\_archive\semantic_archive.md` — 语义层证据、命中、演化记录。
+- `<ASSISTANT_ROOT>\MEMORY\MEMORY_LOG.md` — 记忆代谢周复盘与毕业归档。
+- `<ASSISTANT_ROOT>\长期记忆.md` — 当前处境、时间轴、详细周录。
+- `<ASSISTANT_ROOT>\USER\USER.md` — USER 毕业写入，需 C 级确认。
+- `<ASSISTANT_ROOT>\SOUL\persona\persona_SOUL.md` — SOUL 毕业写入，需 C 级确认。
+- `~/.claude/skills\` — 流程化毕业写入，需 C 级确认。
 
 **同级联动**：
 - `daily-review/SKILL.md` — 周日触发 weekly-review，并提供日级补捞结果。
@@ -44,18 +46,18 @@ updated: 2026-05-07
 
 凡涉及写入下列文件，写入前必须先读取目标文件当前格式与相关模板：
 
-- `<ASSISTANT_ROOT>/MEMORY/00.memory_agent.md`
-- `<ASSISTANT_ROOT>/MEMORY/episodic_inbox.md`
-- `<ASSISTANT_ROOT>/MEMORY/episodic_memory.md`
-- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md`
-- `<ASSISTANT_ROOT>/MEMORY/_archive/semantic_archive.md`
-- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md`
-- `<ASSISTANT_ROOT>/ITERATION_LOG.md`
-- `<ASSISTANT_ROOT>/00 专注区/_本周.md`
-- `<ASSISTANT_ROOT>/长期记忆.md`
-- `<ASSISTANT_ROOT>/USER/USER.md`（毕业写入，C 级确认）
-- `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md`（毕业写入，C 级确认）
-- `~/.claude/skills/`（skill 毕业写入，C 级确认）
+- `<ASSISTANT_ROOT>\MEMORY\00.记忆区_agent.md`
+- `<ASSISTANT_ROOT>\MEMORY\episodic_inbox.md`
+- `<ASSISTANT_ROOT>\MEMORY\episodic_memory.md`
+- `<ASSISTANT_ROOT>\MEMORY\semantic_memory.md`
+- `<ASSISTANT_ROOT>\MEMORY\_archive\semantic_archive.md`
+- `<ASSISTANT_ROOT>\MEMORY\MEMORY_LOG.md`
+- `<ASSISTANT_ROOT>\ITERATION_LOG.md`
+- `<ASSISTANT_ROOT>\00 专注区\_本周.md`
+- `<ASSISTANT_ROOT>\长期记忆.md`
+- `<ASSISTANT_ROOT>\USER\USER.md`（毕业写入，C 级确认）
+- `<ASSISTANT_ROOT>\SOUL\persona\persona_SOUL.md`（毕业写入，C 级确认）
+- `~/.claude/skills\`（skill 毕业写入，C 级确认）
 
 写入事务必须闭合：
 
@@ -82,11 +84,11 @@ updated: 2026-05-07
 
 1. 读取 `_本周.md` 全文。
 2. 读取 `长期记忆.md §当前处境` + `§时间轴`。
-3. 读取 `MEMORY/00.memory_agent.md`，确认 v5 记忆规则。
-4. 读取 `MEMORY/episodic_inbox.md` 活动条目。
-5. 读取 `MEMORY/episodic_memory.md` 全文。
-6. 读取 `MEMORY/semantic_memory.md` + `_archive/semantic_archive.md` 全文。
-7. 读取 `MEMORY/MEMORY_LOG.md` 尾部与 §周复盘模板。
+3. 读取 `MEMORY\00.记忆区_agent.md`，确认 v5 记忆规则。
+4. 读取 `MEMORY\episodic_inbox.md` 活动条目。
+5. 读取 `MEMORY\episodic_memory.md` 全文。
+6. 读取 `MEMORY\semantic_memory.md` + `_archive\semantic_archive.md` 全文。
+7. 读取 `MEMORY\MEMORY_LOG.md` 尾部与 §周复盘模板。
 8. 从 `_本周.md` 识别本周活跃项目，读取各项目 `_overview.md`。
 9. 对本周 touched 项目，按需读取 `_progress/` 管家文件和涉及节点，不全项目盲扫。
 
@@ -101,7 +103,7 @@ updated: 2026-05-07
 - 物理 hour < 06:00 → 逻辑日期 = 物理日期 - 1。
 - 物理 hour ≥ 06:00 → 逻辑日期 = 物理日期。
 
-后续周次归属、`_本周.md` 归档、`MEMORY_LOG` 日期、`LTM` 周录均使用逻辑日期。
+后续周次归属、`_本周.md` 归档、`MEMORY_LOG` 日期、`长期记忆` 周录均使用逻辑日期。
 
 ---
 
@@ -178,13 +180,13 @@ updated: 2026-05-07
 1. 能写成非机械的「预测情境→行动预期」。
 2. 跨日、跨节点或跨情境复现；重大安全 / 越权 / 系统事故可单条保留，但必须写明复审条件。
 3. 有 P轴 / C轴证据，且不是单纯事实正确。
-4. 不与 USER/SOUL、项目主结论、LTM 当前处境冲突。
+4. 不与 USER/SOUL、项目主结论、长期记忆 当前处境冲突。
 
 分类：
 
 - 稳定运行预测 → `semantic_memory.md`。
-- 流程化行动规则 → 先作为 semantic 毕业候选，等待 C 级确认 后写入 skill。
-- 身份层稳定模式 → 先作为 semantic 毕业候选，等待 C 级确认 后写 USER / SOUL。
+- 流程化行动规则 → 先作为 semantic 毕业候选，等待 C verdict 后写入 skill。
+- 身份层稳定模式 → 先作为 semantic 毕业候选，等待 C verdict 后写 USER / SOUL。
 
 #### 星级
 
@@ -260,9 +262,9 @@ semantic 不执行自动毕业。
 
 | 层 | 目的地 | 写入内容 |
 |---|---|---|
-| USER | `<ASSISTANT_ROOT>/USER/USER.md` 对应节 | 标题 + 情境 + 预期 / 稳定认知描述 |
-| SOUL | `<ASSISTANT_ROOT>/SOUL/persona/persona_SOUL.md §行为模式` | 标题 + 触发情境 + 行动模式 + 预期后效 |
-| skill | `~/.claude/skills/` 对应 skill | 触发条件 + 执行动作 + 边界 |
+| USER | `<ASSISTANT_ROOT>\USER\USER.md` 对应节 | 标题 + 情境 + 预期 / 稳定认知描述 |
+| SOUL | `<ASSISTANT_ROOT>\SOUL\persona\persona_SOUL.md §行为模式` | 标题 + 触发情境 + 行动模式 + 预期后效 |
+| skill | `~/.claude/skills\` 对应 skill | 触发条件 + 执行动作 + 边界 |
 
 毕业是条目重写，不是搬运。身份层 / skill 不带星级、来源、证据、related、日期等日志字段。完整审计留在 semantic_archive + `MEMORY_LOG §毕业归档`。
 
@@ -331,3 +333,5 @@ semantic 不执行自动毕业。
 - 不执行自动毕业。
 - 不把 `MEMORY_LOG` 当作新信号入口；旧暂存记录仅作为兼容读取入口，不再新增。
 - 不动 hook / settings。
+
+

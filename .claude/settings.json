@@ -1,5 +1,4 @@
 {
-  "autoMemoryEnabled": false,
   "cleanupPeriodDays": 99999,
   "hooks": {
     "SessionStart": [
@@ -61,7 +60,7 @@
         ]
       },
       {
-        "matcher": "晚安|今天就到这里|bye|good night|that's all for today",
+        "matcher": "晚安|今天就到这里",
         "hooks": [
           {
             "type": "command",
@@ -71,5 +70,6 @@
         ]
       }
     ]
-  }
+  },
+  "autoMemoryEnabled": false
 }

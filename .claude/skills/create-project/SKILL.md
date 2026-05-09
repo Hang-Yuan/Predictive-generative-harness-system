@@ -1,4 +1,6 @@
 ---
+title: create-project/SKILL.md
+type: skill
 name: create-project
 description: 新建项目流程。建项目目录 + `_overview.md` + 同步 portfolio。CLAUDE.md §项目工作加载判定为新建项目时调用。
 ---
@@ -13,12 +15,12 @@ description: 新建项目流程。建项目目录 + `_overview.md` + 同步 port
 
 **下游**：
 - `01 项目区/[新项目]/_overview.md`（创建）
-- `01 项目区/00.projects_agent.md §Portfolio`（追加新项目一行）
+- `01 项目区/00.项目区_agent.md §Portfolio`（追加新项目一行）
 
 **同级联动**：
 - `new-file` skill — 新建 `_overview.md` 时强制补加载链
 - `write-progress` skill — 用户首次需要推进记录时调用，由它建 `_progress/` 容器与管家文件
-- `manage-research-reference` skill — 项目首次需要文献管理时调用（科研类）
+- `manage-research-reference` skill — 项目首次需要文献管理时调用（科研类；待建）
 
 ---
 
@@ -28,7 +30,7 @@ description: 新建项目流程。建项目目录 + `_overview.md` + 同步 port
 
 向用户确认以下要素（一次性问完，允许部分留空）：
 
-- **项目名称**（目录名 + `_overview.md` 标题）——优先英文（`Research Project` / `PhD Application` / `Product Strategy`）；纯业务中文场景可保留中文
+- **项目名称**（目录名 + `_overview.md` 标题）——优先英文（`[项目 1 占位]` / `[项目 4 占位]` / `[项目 5 占位]`）；纯业务中文场景可保留中文
 - **项目目标**（一两句话）
 - **关键人物**（至少含用户自己；若有合作者列出）
 - **当前阶段**（探索期 / 起步期 / 已有积累迁入 等）
@@ -54,7 +56,7 @@ description: 新建项目流程。建项目目录 + `_overview.md` + 同步 port
 └── _archive/          ← 归档容器（首次归档时建）
 ```
 
-**完整结构规范 + 各部分职能 + 命名约定**见 `01 项目区/00.projects_agent.md §项目内部结构规范`（权威源）。本 skill 不重复。
+**完整结构规范 + 各部分职能 + 命名约定**见 `01 项目区/00.项目区_agent.md §项目内部结构规范`（权威源）。本 skill 不重复。
 
 ### 3. 建 `_overview.md`
 
@@ -74,7 +76,7 @@ updated: YYYY-MM-DD
 
 ## 加载链（上下游）
 
-**上游：** `01 项目区/00.projects_agent.md` — 任务涉及 [项目名] 时加载。
+**上游：** `01 项目区/00.项目区_agent.md` — 任务涉及 [项目名] 时加载。
 
 **管辖文件（下游）：**
 - （待项目展开后补充）
@@ -121,7 +123,7 @@ updated: YYYY-MM-DD
 
 ## 管理规则
 
-通用规则见 `01 项目区/00.projects_agent.md`（portfolio / 生命周期 / 跨引用 / 命名 / 骨架通则）。
+通用规则见 `01 项目区/00.项目区_agent.md`（portfolio / 生命周期 / 跨引用 / 命名 / 骨架通则）。
 
 推进记录写入见 `write-progress` skill。
 
@@ -152,7 +154,7 @@ updated: YYYY-MM-DD
 
 ### 5. 更新项目区 portfolio
 
-向 `01 项目区/00.projects_agent.md §Portfolio 全项目索引` 追加一行：
+向 `01 项目区/00.项目区_agent.md §Portfolio 全项目索引` 追加一行：
 
 ```
 | [项目名] | 活跃 | YYYY-MM-DD | 项目初始化 |
@@ -166,7 +168,7 @@ S 级静默执行。
 
 1. 在新项目 `_overview.md §相关项目` 写入对方路径
 2. 在对方 `_overview.md §相关项目` 写入本项目路径（**C 级确认**）
-3. 向 `00.projects_agent.md §跨项目授权索引` 追加一行
+3. 向 `00.项目区_agent.md §跨项目授权索引` 追加一行
 
 ### 7. 反馈
 

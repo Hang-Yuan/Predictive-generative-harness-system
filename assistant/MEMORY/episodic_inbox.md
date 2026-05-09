@@ -17,7 +17,7 @@ updated: YYYY-MM-DD
 - `episodic_memory.md` — close-node / daily-review / weekly-review 聚合本文件条目后写入。
 
 **同级联动：**
-- `00.memory_agent.md` — 写入判定、保留期、升格规则。
+- `00.记忆区_agent.md` — 写入判定、保留期、升格规则。
 - `MEMORY_LOG.md` — 升格、衰减、归档发生时记录。
 
 ---
@@ -48,27 +48,41 @@ cat >> "<ASSISTANT_ROOT>/MEMORY/episodic_inbox.md" <<'EOF'
 EOF
 ```
 
-禁止：不用 Edit 改写整份文件；不用 Write 覆盖重建文件；不插入中段；不粘贴整段聊天。
+禁止：
+
+- 不用 Edit 改写整份文件。
+- 不用 Write 覆盖重建文件。
+- 不插入中段。
+- 不粘贴整段聊天。
 
 ---
 
 ## 字段
 
-| 字段 | 说明 |
+| 字段 | 含义 |
 |---|---|
-| 编号 | `JYYYYMMDD-序号`。 |
-| 时间 | 物理时间，本地时区。 |
-| 来源 | 对话 / close-node / daily-review / weekly-review / 手动补录。 |
-| P轴 | 命中 / 击穿 / 未覆盖。 |
-| C轴 | 正向确认 / 反对 / 纠正 / 中性。 |
-| 类型提示 | 程序 / 语义 / 混合 / 未定。 |
-| schema 指针 | 被命中、击穿或缺失的 schema；没有则写 `未覆盖`。 |
-| 观察记录 | 一句话说明发生了什么校准。 |
-| 处理状态 | 活动 / 已消耗 / 已升情景记忆 / 已衰减 / 已归档。 |
+| ID | `JYYYYMMDD-NNN` 格式，YYYYMMDD 为逻辑日期，NNN 为当日序号 |
+| 时间戳 | `YYYY-MM-DD HH:mm` 物理时间 |
+| 触发场景 | 对话 / hook / close-node / daily-review / weekly-review |
+| P轴 | 命中 / 击穿 / 未覆盖 |
+| C轴 | 正向确认 / 反对 / 纠正 / 中性 |
+| 类型 | 程序 / 语义 / 混合 |
+| schema 指针 | 关联现有 schema（如有），无则填 `—` |
+| 观察 | 一句话描述本次校准信号 |
+| 状态 | 活动 / 已升格 / 已衰减 |
+
+---
+
+## 保留期
+
+未升格的条目保留 7 天；到期由 daily-review 或 weekly-review 标记 `已衰减`，不物理删除。
+
+升格条件：在 episodic_memory 中能写成可复现的"情境→行动 / 预期"，则由 close-node / daily-review / weekly-review 聚合升格，原条目状态改 `已升格`。
 
 ---
 
 ## 活动收件箱
 
-| 编号 | 时间 | 来源 | P轴 | C轴 | 类型提示 | schema 指针 | 观察记录 | 处理状态 |
+| ID | 时间戳 | 触发场景 | P轴 | C轴 | 类型 | schema 指针 | 观察 | 状态 |
 |---|---|---|---|---|---|---|---|---|
+| J20260101-001 | 2026-01-01 10:00 | 对话 | 击穿 | 纠正 | 混合 | — | [示例条目：用户在某情境下纠正了 AI 的预期，对应 schema 待升格] | 活动 |

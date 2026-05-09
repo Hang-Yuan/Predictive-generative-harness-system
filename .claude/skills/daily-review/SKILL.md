@@ -1,4 +1,6 @@
 ---
+title: daily-review/SKILL.md
+type: skill
 name: daily-review
 description: 对话结束汇总流程。v5：日级回扫、身份层前置过滤、episodic_inbox 代谢、项目结论/阶段决策分流；告别语触发后先完整执行汇总流程，再回应道别。
 updated: 2026-05-07
@@ -11,13 +13,13 @@ updated: 2026-05-07
 **上游触发**：`~/.claude/hooks/session_end.sh` 检测告别语后注入触发信号；也可由用户明确要求本轮总结触发。
 
 **下游文件**：
-- `<ASSISTANT_ROOT>/MEMORY/episodic_inbox.md` — 日级读取和消耗实时校准信号。
-- `<ASSISTANT_ROOT>/MEMORY/episodic_memory.md` — 日级聚合后的情景级候选。
-- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md` — 只读启动注入 schema；daily-review 不升格。
-- `<ASSISTANT_ROOT>/00 专注区/_本周.md` — 写今日进展。
-- `<ASSISTANT_ROOT>/长期记忆.md` — 当前处境变化时更新。
-- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md` — 记录 inbox 升格、情景层衰减、语义层待复审标记。
-- `<ASSISTANT_ROOT>/ITERATION_LOG.md` — 架构 / skill / 协议变更。
+- `<ASSISTANT_ROOT>\MEMORY\episodic_inbox.md` — 日级读取和消耗实时校准信号。
+- `<ASSISTANT_ROOT>\MEMORY\episodic_memory.md` — 日级聚合后的情景级候选。
+- `<ASSISTANT_ROOT>\MEMORY\semantic_memory.md` — 只读启动注入 schema；daily-review 不升格。
+- `<ASSISTANT_ROOT>\00 专注区\_本周.md` — 写今日进展。
+- `<ASSISTANT_ROOT>\长期记忆.md` — 当前处境变化时更新。
+- `<ASSISTANT_ROOT>\MEMORY\MEMORY_LOG.md` — 记录 inbox 升格、情景层衰减、语义层待复审标记。
+- `<ASSISTANT_ROOT>\ITERATION_LOG.md` — 架构 / skill / 协议变更。
 
 **同级联动**：
 - `weekly-review/SKILL.md` — daily 不毕业，周级复盘才执行代谢与毕业。
@@ -35,15 +37,15 @@ updated: 2026-05-07
 
 凡步骤涉及写入下列文件，必须先读取目标文件当前格式：
 
-- `<ASSISTANT_ROOT>/MEMORY/00.memory_agent.md`
-- `<ASSISTANT_ROOT>/MEMORY/episodic_inbox.md`
-- `<ASSISTANT_ROOT>/MEMORY/episodic_memory.md`
-- `<ASSISTANT_ROOT>/MEMORY/semantic_memory.md`
-- `<ASSISTANT_ROOT>/MEMORY/_archive/semantic_archive.md`
-- `<ASSISTANT_ROOT>/MEMORY/MEMORY_LOG.md`
-- `<ASSISTANT_ROOT>/ITERATION_LOG.md`
-- `<ASSISTANT_ROOT>/00 专注区/_本周.md`
-- `<ASSISTANT_ROOT>/长期记忆.md`
+- `<ASSISTANT_ROOT>\MEMORY\00.记忆区_agent.md`
+- `<ASSISTANT_ROOT>\MEMORY\episodic_inbox.md`
+- `<ASSISTANT_ROOT>\MEMORY\episodic_memory.md`
+- `<ASSISTANT_ROOT>\MEMORY\semantic_memory.md`
+- `<ASSISTANT_ROOT>\MEMORY\_archive\semantic_archive.md`
+- `<ASSISTANT_ROOT>\MEMORY\MEMORY_LOG.md`
+- `<ASSISTANT_ROOT>\ITERATION_LOG.md`
+- `<ASSISTANT_ROOT>\00 专注区\_本周.md`
+- `<ASSISTANT_ROOT>\长期记忆.md`
 - 当前项目主文档 / `_overview.md` / `_progress/`
 
 写入事务要求：
@@ -90,7 +92,7 @@ updated: 2026-05-07
 | 单次校准信号 | 用户纠正、反对、正向确认、明显漏写 | `episodic_inbox.md` |
 | 可复现情景模式 | 同类校准当天多次出现，边界清楚 | `episodic_memory.md` |
 | 语义层可能击穿 | 启动注入 schema 被用户明确纠正 | 标记 weekly-review 复审 |
-| 项目结论 / 阶段决策 | 项目框架定稿、悬置点、方向选择 | 项目主文档 / progress / LTM，需按权限确认 |
+| 项目结论 / 阶段决策 | 项目框架定稿、悬置点、方向选择 | 项目主文档 / progress / 长期记忆，需按权限确认 |
 | 普通低风险流水 | 当日做了什么 | `_本周.md` |
 
 #### 1c · inbox 补捞
@@ -110,7 +112,7 @@ updated: 2026-05-07
 1. 能写成「情境→校准」或「情境→预期变化」。
 2. 当天复现，或单条高风险信号足够明确。
 3. 有 P轴 / C轴标注。
-4. 不与 USER/SOUL、项目主结论、LTM 当前处境冲突。
+4. 不与 USER/SOUL、项目主结论、长期记忆 当前处境冲突。
 
 写入使用情景层 1-3 星：
 
@@ -138,7 +140,7 @@ daily-review 不写 `semantic_memory.md`、USER / SOUL / skill。
 
 | 信号 | 内容摘要 | 建议写入位置 | 确认 |
 |---|---|---|---|
-| 结论 / 悬置 / 决策 / 框架 | 一句话描述 | 项目主文档 / `_progress` / LTM | 待确认 |
+| 结论 / 悬置 / 决策 / 框架 | 一句话描述 | 项目主文档 / `_progress` / 长期记忆.md | 待确认 |
 
 未经确认不写 C 级项目结论；已授权的项目推进流水按 S/N 规则处理。
 
@@ -201,7 +203,7 @@ daily-review 不写 `semantic_memory.md`、USER / SOUL / skill。
 - `episodic_memory.md` 升星 / 降星 / 衰减 / 归档。
 - `semantic_memory.md` 被明显击穿时，只写 MEMORY_LOG 复审标记；不改 `semantic_memory.md`。
 
-满足 → 按 `MEMORY_LOG §操作日志` 模板追加一行。
+满足 → 按 `MEMORY_LOG §操作日志` 模板追加一行。  
 不满足 → 跳过。
 
 inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归档时再进入代谢记录。
@@ -212,7 +214,7 @@ inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归
 
 条件：发生系统架构、skill、协议、文件结构、hook 等变更。
 
-满足 → 按 `ITERATION_LOG.md` 模板追加版本化条目。
+满足 → 按 `ITERATION_LOG.md` 模板追加版本化条目。  
 不满足 → 跳过。
 
 ---
@@ -221,7 +223,7 @@ inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归
 
 条件：逻辑日期为周日。
 
-满足 → 执行 `weekly-review` v5 流程。
+满足 → 执行 `weekly-review` v5 流程。  
 不满足 → 跳过。
 
 ---
@@ -240,3 +242,4 @@ inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归
 - 不启动情景层注入。
 - 不把普通具体事件强行抽象成 schema。
 - 不动 hook / settings。
+
