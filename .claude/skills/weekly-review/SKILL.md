@@ -62,7 +62,7 @@ updated: 2026-05-07
 写入事务必须闭合：
 
 - semantic new/up/mod/merge/graduate：`semantic_memory.md` 主文件 + `_archive/semantic_archive.md` 证据 + MEMORY_LOG；若来源是 episodic，回写 episodic 提取记录、最后激活、提取次数。
-- inbox 消耗：回写 `episodic_inbox.md` 状态。
+- inbox 消耗：已升格 / 已吸收 / 已修正 / 无保留价值的 `episodic_inbox.md` 行物理删除；仍需观察的保留为 `活动`；行级写入 / 删除为 N 级，执行后汇总。
 - episodic 状态变化 / 归档：主文件状态或移出，不做物理删除。
 - 架构 / skill / 协议变更写 `ITERATION_LOG`，不写 `MEMORY_LOG §操作日志`。
 
@@ -216,7 +216,7 @@ updated: 2026-05-07
 | 提取次数 ≥2 | 不按时间自动归档 |
 | 提取次数 ≥5 | 复审是否应合并进 semantic 或项目规则 |
 
-归档不是删除；物理删除仍属 C 级。
+episodic_memory / semantic_memory 的归档不是删除；物理删除整份记忆文件仍属 C 级。L0 inbox 的行级写入 / 删除是 N 级默认遗忘代谢动作。
 
 #### 4b · semantic_memory 审查
 
@@ -242,7 +242,7 @@ semantic 不执行自动毕业。
    - `MEMORY_LOG §操作日志` 追加一行代谢流水。
    - 若来源是 episodic，回写提取记录、最后激活、提取次数。
 2. inbox / episodic 状态变化：
-   - inbox 回写处理状态。
+   - inbox 已消耗行物理删除；仍需观察的行保持 `活动`。L0 行级删除为 N 级，不问 C。
    - 主文件修改状态 / 提取次数 / 最后激活。
 3. 项目结论不写 semantic，回项目主文档或 progress。
 
@@ -333,5 +333,3 @@ semantic 不执行自动毕业。
 - 不执行自动毕业。
 - 不把 `MEMORY_LOG` 当作新信号入口；旧暂存记录仅作为兼容读取入口，不再新增。
 - 不动 hook / settings。
-
-

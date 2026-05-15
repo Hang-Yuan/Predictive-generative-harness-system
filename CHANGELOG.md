@@ -8,6 +8,22 @@ Predictive Generative Harness for Claude Code 的模板版本迭代记录。
 - 5.0 之前版本不再作为升级链追溯；旧版用户建议重新部署 5.0。
 - 每次发布只记录公开模板结构、入口协议、初始化流程、hook / skill / assistant 骨架变化。
 
+## v5.0.1 · 2026-05-14 · L0 inbox 默认遗忘修订
+
+本次是记忆系统可靠性修订。重点不是 hook 9 列模板本身，而是防止 AI / skill 在补捞、close-node、daily-review、weekly-review 时把 L0 写坏或把已消耗条目堆成状态归档。
+
+### 修订内容
+
+- `assistant/MEMORY/episodic_inbox.md` 明确：新条目必须严格 9 列、首尾有 `|`、不得断表、不得重建表头、不得创建第二个活动收件箱。
+- `assistant/MEMORY/00.记忆区_agent.md` 明确：L0 是高频写删层；review 消耗后默认物理删除原 inbox 行，只有仍待观察的信号保留为 `活动`。
+- `close-node` / `daily-review` / `weekly-review` 三个 skill 同步写入纪律和默认遗忘规则。
+- `memory_signal` hook 增加写入纪律提醒：追加前先读目标 inbox，选择同一物理文件内当日下一个未占用编号。
+- 权限定级明确：L0 inbox 行级写入 / 行级物理删除均为 N 级动作，执行后汇总，不问 C 级 verdict；删除整份文件或非 inbox 历史证据仍为 C 级。
+
+### 迁移提示
+
+已部署用户升级时，先检查 `assistant/MEMORY/episodic_inbox.md` 是否存在少列行、重复 ID 或活动表中间空行；修正后再继续 review。不要把 L0 当长期归档区使用。
+
 ## v5.0.0 · YYYY-MM-DD · PGH 5.0 新起点
 
 5.0 是新起点，不再追溯旧版本历史。

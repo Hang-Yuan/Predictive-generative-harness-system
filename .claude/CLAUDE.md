@@ -259,9 +259,9 @@
 
 | 级 | 含义 | 示例 | 执行 |
 |----|------|------|------|
-| S · 静默 | 低风险、可逆、局部 | episodic_inbox 写入；`_本周.md` 写入 | 直接做 |
-| N · 通知 | 中风险、影响可见 | 项目主文档结论节；LTM 更新 | 一句话告知 |
-| C · 确认 | 高风险、不可逆 | 修改 USER / SOUL / skill；semantic 毕业；删除 / 覆盖 | 告知 + 等确认 |
+| S · 静默 | 低风险、可逆、局部 | `_本周.md` 写入 | 直接做 |
+| N · 通知 | 中风险、影响可见，或需要事后可见回执 | episodic_inbox 行级写入 / 行级物理删除；bus 维护；skill 路径调整；项目主文档结论节；LTM 更新 | 直接做，事后回报 |
+| C · 确认 | 高风险、不可逆 | 修改 USER / SOUL / skill；semantic 毕业；删除 / 覆盖整份文件 | 告知 + 等确认 |
 
 ### 时间感知
 
@@ -310,7 +310,7 @@ PGH 5.0 默认只内置一个 sub-agent：
 
 | 目标 | 授权 |
 |---|---|
-| episodic_inbox | 模型按 hook 注入的两轴自判，S 级直接写 |
+| episodic_inbox | 模型按 hook 注入的两轴自判，N 级直接写；review 消耗后的行级物理删除也为 N 级 |
 | episodic_memory / semantic_memory | 仅 skill 调用（close-node / daily-review / weekly-review）按流转规则写 |
 | 身份层（SOUL / USER / skill） | 仅[用户称呼] C verdict 后部署 |
 

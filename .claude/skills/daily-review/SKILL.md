@@ -50,8 +50,8 @@ updated: 2026-05-07
 
 写入事务要求：
 
-- inbox 新增：只追加 `episodic_inbox.md` 文件末尾。
-- inbox 升格：合并进 `episodic_memory.md`，并回写 inbox 状态。
+- inbox 新增：只追加到 `episodic_inbox.md` 的活动表末尾，严格 9 列；L0 行级写入为 N 级，不单独询问。
+- inbox 升格 / 吸收 / 衰减：合并进 `episodic_memory.md` 或确认无保留价值后，物理删除原 inbox 行；L0 行级删除为 N 级，不回写状态堆积历史。
 - daily-review 不写 `semantic_memory.md`；只标记需要 weekly-review 复审。
 - 项目结论 / 阶段决策：写项目权威源，不写入记忆池。
 - 架构 / skill / 协议变更：写 ITERATION_LOG，不写 MEMORY_LOG。
@@ -103,7 +103,7 @@ updated: 2026-05-07
 | JYYYYMMDD-001 | YYYY-MM-DD HH:mm | daily-review | 击穿 | 纠正 | 混合 | schema 指针 | 一句话观察 | 活动 |
 ```
 
-补捞只追加文件末尾，不插入中段，不搬整段聊天。单纯补写 inbox 不写 `MEMORY_LOG`。
+补捞只追加到活动表末尾，不插入中段，不搬整段聊天。新行必须严格 9 列、首尾有 `|`、不得含额外 `|`、不得插入空行或重建表头；编号按同一物理 inbox 内当日最大序号取下一个未占用值。单纯补写 inbox 不写 `MEMORY_LOG`。L0 行级写入 / 删除均为 N 级。
 
 #### 1d · episodic_memory 聚合
 
@@ -198,7 +198,7 @@ daily-review 不写 `semantic_memory.md`、USER / SOUL / skill。
 
 条件：本次会话发生记忆代谢：
 
-- inbox 条目升为或合并进 `episodic_memory.md`。
+- inbox 条目升为或合并进 `episodic_memory.md`，并删除原 inbox 行。
 - `episodic_memory.md` 修正 / 合并。
 - `episodic_memory.md` 升星 / 降星 / 衰减 / 归档。
 - `semantic_memory.md` 被明显击穿时，只写 MEMORY_LOG 复审标记；不改 `semantic_memory.md`。
@@ -206,7 +206,7 @@ daily-review 不写 `semantic_memory.md`、USER / SOUL / skill。
 满足 → 按 `MEMORY_LOG §操作日志` 模板追加一行。  
 不满足 → 跳过。
 
-inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归档时再进入代谢记录。
+inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、批量衰减或归档时再进入代谢记录。单条 inbox 删除不逐条写日志；删除整份文件或非 inbox 历史证据仍为 C 级。
 
 ---
 
@@ -242,4 +242,3 @@ inbox 只是新增条目时，默认不写 MEMORY_LOG；等升格、衰减、归
 - 不启动情景层注入。
 - 不把普通具体事件强行抽象成 schema。
 - 不动 hook / settings。
-
